@@ -23,6 +23,10 @@ async def fuel_calc(message: Message):
                         'При точном расчете будет необходимо указать ваш средний расход топлива на круг, а так же ваше среднее время круга\n',
                         reply_markup=keyboard)
 
+@calculator_router.message(F.text == message_descriptor.calc_select_en)
+async def fuel_calc_en(message: Message):
+    await fuel_calc(message)
+
 #/start -> калькулятор топлива -> точный калькулятор топлива
 @calculator_router.message(F.text == message_descriptor.accur)
 async def accure_info_get(message: Message):
@@ -36,22 +40,17 @@ async def accure_info_get(message: Message):
     keyboard = types.ReplyKeyboardMarkup(keyboard=b_conf, resize_keyboard=True)
     answer = FuelCalculator.accurate_calculation(fuel_flow, lap_time, race_time)
     await message.answer(f'Введи неоходимые данные для расчета топлива! \n'
-                         f'Любой параметр можно указать заного\n'
-                         f'\n'
-                         f'Текущие данные:\n'
-                         f'\n'
+                         f'Любой параметр можно указать заного\n\n'
+                         f'Текущие данные:\n\n'
                          f'Расход топлива на круг: \n'
-                         f'*{fuel_flow if fuel_flow is not None else "НЕТ ДАННЫХ"}* литров на круг\n'
-                         f'\n'
+                         f'*{fuel_flow if fuel_flow is not None else "НЕТ ДАННЫХ"}* литров на круг\n\n'
                          f'Среднее вермя круга: \n'
                          f'*{int(lap_time.total_seconds()//60) if lap_time is not None else 'НЕТ ДАННЫХ'}* минут \n'
                          f'*{lap_time.seconds - (int(lap_time.total_seconds()//60) * 60) if lap_time is not None else 'НЕТ ДАННЫХ'}* секунд \n'
-                         f'*{str(lap_time.total_seconds()).split('.')[1].ljust(3, '0') if lap_time is not None else 'НЕТ ДАННЫХ'}* миллисекунды \n'
-                         f'\n'
+                         f'*{str(lap_time.total_seconds()).split('.')[1].ljust(3, '0') if lap_time is not None else 'НЕТ ДАННЫХ'}* миллисекунды \n\n'
                          f'Общее время гонки'
                          f'{int(race_time.total_seconds() // 3600) if race_time is not None else 'НЕТ ДАННЫХ'} часов \n'
-                         f'{int(race_time.total_seconds() // 60) - (int(race_time.total_seconds() // 3600) * 60) if race_time is not None else 'НЕТ ДАННЫХ'} минут \n'
-                         f'\n'
+                         f'{int(race_time.total_seconds() // 60) - (int(race_time.total_seconds() // 3600) * 60) if race_time is not None else 'НЕТ ДАННЫХ'} минут \n\n'
                          f'На эту гонку нужно залить *{answer}* литров \n'
                          f'Если предусмотрен прогревочный круг, понадобится *{answer + fuel_flow if isinstance(answer, float) else answer}* литров', parse_mode='Markdown', reply_markup=keyboard)
 

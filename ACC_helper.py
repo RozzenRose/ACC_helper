@@ -1,7 +1,6 @@
-import aiogram
 import asyncio
 from aiogram import Bot, Dispatcher
-from config import API_TOKEN
+from DB_settings.config import API_TOKEN
 from handlers.main_root import main_root_router
 from handlers.сalculator import calculator_router
 

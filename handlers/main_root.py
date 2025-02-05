@@ -1,44 +1,67 @@
 from aiogram import F, Router
-from aiogram.filters import  Command
+from aiogram.filters import Command
 from aiogram.types import Message, FSInputFile
 from aiogram import types
 import message_descriptor
-from custom_classes import user_data, user_selection
+import storage.messages as messages
+import storage.keyboards as keyboards
+from custom_classes import user_data, user_selection, user_language
 from aiogram.dispatcher.event.bases import SkipHandler
 
-from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy import text
-from DB_config import settings
+from DB_settings.DB_engine import engine
 
 #Основной рут бота
 
 main_root_router = Router()
 
-engine = create_async_engine(
-    url=settings.DATABASE_URL_asyncpg,
-    echo=False
-)
-
-
 #/start
 @main_root_router.message(Command('start')) #стартовое сообщение
 async def cmd_start(message: Message):
-    user_selection.__init__(user_id=message.from_user.id)
-    user_data.__init__(user_id=message.from_user.id)      #обьявляем переменную с кэшем
-    b_conf = [[types.KeyboardButton(text=message_descriptor.calc_select)],     #создаем клавиши
-            [types.KeyboardButton(text=message_descriptor.setups), types.KeyboardButton(text=message_descriptor.track_guide)],
-            [types.KeyboardButton(text=message_descriptor.car_select), types.KeyboardButton(text=message_descriptor.track_select)],
-            [types.KeyboardButton(text=message_descriptor.drop)]]
-    car = user_selection.get(message.from_user.id, 'car')
-    track = user_selection.get(message.from_user.id, 'track')
-    #создаем клавиатуру с клавишами
-    keyboard = types.ReplyKeyboardMarkup(keyboard=b_conf, resize_keyboard=True, input_field_placeholder='Чем займемся сегодня?')
-    #отправляем пользователю сообщение с клавиатурой
-    await message.answer(f'Привет, это бот-помошник для игры Asetto Corsa Competizione!\n\n'
-                         f'Для того чтобы получить сетапы или трекгайды, сначала нужно выбрать трассу и автомобиль.\n\n'
-                         f'Для того что бы применить сетапы к машине, открой архив и помести файлы из него в:\n ___C:\\users\\username\\Assetto Corsa Competizione\\Setups\\папка машины\\папка трассы___\n\n'
-                         f'🏎️ Текущая машина:   *{car[1:] if car != None else "Нет выбранной машины"}*\n'
-                         f'🏁 Текущая трасса:   *{track[1:] if track != None else "Нет выбранной трассы"}*', reply_markup=keyboard, parse_mode='Markdown')
+    user_selection.__init__(user_id=message.from_user.id) #заносим ползователя в объект хранения языка
+    user_data.__init__(user_id=message.from_user.id)      #заносим ползователя в объект хранения данных
+    user_language.__init__(user_id=message.from_user.id)  #заносим ползователя в объект хранения языка
+    if user_language.get(message.from_user.id) is None:
+        b_conf = [[types.KeyboardButton(text=message_descriptor.eng), types.KeyboardButton(text=message_descriptor.rus)]]
+        keyboard = types.ReplyKeyboardMarkup(keyboard=b_conf, resize_keyboard=True)
+        await message.answer(f'Select your language:\n'
+                                  f'Выбери язык:', reply_markup=keyboard, parse_mode='Markdown')
+    elif user_language.get(message.from_user.id) == 'RUS':
+        car = user_selection.get(message.from_user.id, 'car')
+        track = user_selection.get(message.from_user.id, 'track')
+        #создаем клавиатуру с клавишами
+        keyboard = types.ReplyKeyboardMarkup(keyboard=keyboards.start_message, resize_keyboard=True, input_field_placeholder='Чем займемся сегодня?')
+        #отправляем пользователю сообщение с клавиатурой
+        await message.answer(f'{messages.start_message_letter}'
+                             f'🏎️ Текущая машина:   *{car[1:] if car != None else "Нет выбранной машины"}*\n'
+                             f'🏁 Текущая трасса:   *{track[1:] if track != None else "Нет выбранной трассы"}*', reply_markup=keyboard, parse_mode='Markdown')
+    else:
+        car = user_selection.get(message.from_user.id, 'car')
+        track = user_selection.get(message.from_user.id, 'track')
+        # создаем клавиатуру с клавишами
+        keyboard = types.ReplyKeyboardMarkup(keyboard=keyboards.start_message_en, resize_keyboard=True, input_field_placeholder='What do you want to do?')
+        # отправляем пользователю сообщение с клавиатурой
+        await message.answer(f'{messages.start_message_letter_en}'
+                             f'🏎️ Current car:   *{car[1:] if car != None else "No selected car"}*\n'
+                             f'🏁 Current track:   *{track[1:] if track != None else "No selected track"}*', reply_markup=keyboard, parse_mode='Markdown')
+
+@main_root_router.message(F.text == message_descriptor.eng)
+async def select_eng(message: Message):
+    user_language.put(message.from_user.id, 'ENG')
+    await cmd_start(message)
+
+@main_root_router.message(F.text == message_descriptor.rus)
+async def select_eng(message: Message):
+    user_language.put(message.from_user.id, 'RUS')
+    await cmd_start(message)
+
+@main_root_router.message(F.text == message_descriptor.leng_swap)
+async def len_swap(message: Message):
+    if user_language.get(message.from_user.id) == 'ENG':
+        user_language.put(message.from_user.id, 'RUS')
+    else:
+        user_language.put(message.from_user.id, 'ENG')
+    await cmd_start(message)
 
 #Сброс кеша
 @main_root_router.message(F.text == message_descriptor.drop)
@@ -60,24 +83,23 @@ async def reboot(message: Message):
     await cmd_start(message)                    #Отправляем ему стартовое сообщение
 
 @main_root_router.message(F.text == message_descriptor.car_select)
-async def fuel_calc(message: Message):
+async def car_selector(message: Message):
     user_selection.put(message.from_user.id, 'car_selector', True)
-    await message.answer(f'Выбери машину:\n\n'
-                         f'Porsche:\n'
-                         f'/Porsche_922_GT3R\n'
-                         f'Ferrari:\n'
-                         f'/Ferrari_296_GT3\n'
-                         f'Lamborghini:\n'
-                         f'/Lamborghini_Huracan_GT3_EVO_2\n\n')
+    await message.answer(messages.car_select_message if user_language.get(message.from_user.id) == 'RUS' else messages.car_select_message_en)
+
+@main_root_router.message(F.text == message_descriptor.car_select_en)
+async def car_selector_en(message: Message):
+    await car_selector(message)
 
 #/start -> Выбор трассы
 @main_root_router.message(F.text == message_descriptor.track_select)
-async def fuel_calc(message: Message):
+async def track_selector(message: Message):
     user_selection.put(message.from_user.id, 'track_selector', True)
-    await message.answer(f'Выбери трассу:\n'
-                         f'/Spa_Francorchamps\n'
-                         f'/Monza\n'
-                         f'/Misano')
+    await message.answer(messages.track_select_message if user_language.get(message.from_user.id) == 'RUS' else messages.track_select_message_en)
+
+@main_root_router.message(F.text == message_descriptor.track_select_en)
+async def track_selector_en(message: Message):
+    await track_selector(message)
 
 @main_root_router.message(F.text == message_descriptor.track_guide)
 async def track_guide(message: Message):
@@ -94,6 +116,10 @@ async def track_guide(message: Message):
     else:
         await cmd_start(message)
 
+@main_root_router.message(F.text == message_descriptor.track_guide_en)
+async def track_guide_en(message: Message):
+    await track_guide(message)
+
 @main_root_router.message(F.text == message_descriptor.setups)
 async def setup(message: Message):
     car = user_selection.get(message.from_user.id, 'car')
@@ -103,10 +129,13 @@ async def setup(message: Message):
             setup_path = FSInputFile(f'setups/{car[1:]}/{track[1:]}/setups.zip')
             await message.answer_document(setup_path)
         except:
-            await message.answer('У нас пока нет сетапов для этой машины и трассы')
+            await message.answer('У нас пока нет сетапов для этой машины и трассы' if user_language.get(message.from_user.id) == 'RUS' else "We don't have setups for this car on this track yet")
     else:
         await cmd_start(message)
 
+@main_root_router.message(F.text == message_descriptor.setups_en)
+async def setups_en(message: Message):
+    await setup(message)
 
 #хендлер для ответов на выбор трасс или машин
 @main_root_router.message()

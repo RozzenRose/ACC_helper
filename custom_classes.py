@@ -54,7 +54,6 @@ class UserData:
                 'lap_time': None,                     #время круга
                 'race_time': None}                    #время гонки
 
-
     def put(self, user_id, key, value):
         if user_id not in self.data:
             self.data[user_id] = {}
@@ -71,6 +70,29 @@ class UserData:
             del self.data[user_id]
 
 user_data = UserData()
+
+class LanguageSelect:
+    user_language = {}
+    _instance = None
+
+    def __new__(cls, *arg, **kwargs):
+        if cls._instance is None:
+            cls._instance = object.__new__(cls)
+        return cls._instance
+
+    def __init__(self, user_id=None):
+        if user_id not in self.user_language:
+            if user_id is not None:
+                self.user_language[user_id] = None
+
+    def put(self, user_id, value):
+        self.user_language[user_id] = value
+
+    def get(self, user_id):
+        user_data = self.user_language.get(user_id, 'ENG')
+        return user_data
+
+user_language = LanguageSelect()
 
 class FuelCalculator:
     @staticmethod
