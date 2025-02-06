@@ -82,6 +82,10 @@ async def reboot(message: Message):
         pass
     await cmd_start(message)                    #Отправляем ему стартовое сообщение
 
+@main_root_router.message(F.text == message_descriptor.reboot_en)
+async def reboot_en(message: Message):
+    await reboot(message)
+
 @main_root_router.message(F.text == message_descriptor.car_select)
 async def car_selector(message: Message):
     user_selection.put(message.from_user.id, 'car_selector', True)

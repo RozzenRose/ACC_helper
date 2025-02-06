@@ -30,8 +30,8 @@ ff_get_en = 'Specify fuel consumption per circle'
 lt_get_en = 'Specify average lap time'
 rt_get_en = 'Specify the duration of the race'
 
-car_select_en = '🏎️ Select car'
-track_select_en = '🏁 Select track'
+car_select_en = '🏎️ Select a car'
+track_select_en = '🏁 Select a track'
 
 track_guide_en = '📚 Truck guide'
 setups_en = '🛠 Setups'
