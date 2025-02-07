@@ -2,5 +2,6 @@
 config.py
 .venv/
 venv/
-.idea
-__pycache__
+.idea/
+__pycache__/
+handlers/__pycache__
