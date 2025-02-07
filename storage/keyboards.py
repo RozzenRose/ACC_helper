@@ -37,4 +37,10 @@ get_ap_calc = [[types.KeyboardButton(text=message_descriptor.track_select)],
                 [types.KeyboardButton(text=message_descriptor.rt_get)],
                 [types.KeyboardButton(text=message_descriptor.reboot)]]
 
+get_ap_calc_en = [[types.KeyboardButton(text=message_descriptor.track_select_en)],
+                  [types.KeyboardButton(text=message_descriptor.rt_get_en)],
+                  [types.KeyboardButton(text=message_descriptor.reboot_en)]]
+
 only_back = [[types.KeyboardButton(text=message_descriptor.reboot)]]
+
+only_back_en = [[types.KeyboardButton(text=message_descriptor.reboot_en)]]

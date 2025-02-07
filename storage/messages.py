@@ -63,7 +63,7 @@ def accurate_calculator_en(fuel_flow, lap_time, race_time, answer):
             f'Race duration: \n'
             f'*{int(race_time.total_seconds() // 3600) if race_time is not None else 'NO DATA'}* hours \n'
             f'*{round(int(race_time.total_seconds() // 60) - (int(race_time.total_seconds() // 3600) * 60), 3) if race_time is not None else 'NO DATA'}* minutes \n\n'
-            f'You will need *{round(answer, 3) if answer is not None else 'NO DATA'}* liters')
+            f'You need to fill up *{round(answer, 3) if answer is not None else 'NO DATA'}* liters')
 
 get_flow = f'Введи средний расход топлива на круг, десятые отдели точкой:'
 get_flow_en = f'Enter the average fuel consumption per lap, separating tenths with a dot:'
@@ -104,4 +104,17 @@ def aprox_calculation(track, race_time, answer, lap_flow, lap_time):
             f'{round(int(race_time.total_seconds() // 60) - (int(race_time.total_seconds() // 3600) * 60), 3) if race_time is not None else 'НЕТ ДАННЫХ'} минут\n\n'
             f'Тебе нужно залить: {round(answer, 3) if answer is not None else 'НЕТ ДАННЫХ'} литров')
 
+def aprox_calculation_en(track, race_time, answer, lap_flow, lap_time):
+    return(f'To calculate the approximate fuel cost, you need to specify the route and duration of the race.\n\n '
+            f'The bot will calculate fuel from approximate lap time and consumption values.\n\n '
+            f'The calculation will be very approximate, not recommended for important races!\n\n'
+            f'Selected route: {track[1:] if track is not None else 'NO DATA'}\n'
+            f'Approximate consumption per circle: {lap_flow if lap_flow is not None else 'NO DATA'}\n'
+            f'Approximate lap time: {lap_time if lap_time is not None else 'NO DATA'}\n\n'
+            f'Race duration: \n'
+            f'{int(race_time.total_seconds() // 3600) if race_time is not None else 'NO DATA'} hours\n'
+            f'{round(int(race_time.total_seconds() // 60) - (int(race_time.total_seconds() // 3600) * 60), 3) if race_time is not None else 'NO DATA'} minutes\n\n'
+            f'You need to fill up: {round(answer, 3) if answer is not None else 'NO DATA'} liters')
+
 failed_aprox = 'У нас пока недостаточно данных для примерного расчета топлива на этой трассе'
+failed_aprox_en = "We don't have enough data yet to make an approximate calculation."
