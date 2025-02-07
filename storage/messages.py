@@ -3,8 +3,8 @@ start_message_letter = (f'Привет, это бот-помошник для и
                         f'Для того что бы применить сетапы к машине, открой архив и помести файлы из него в:\n '
                         f'___C:\\users\\username\\Assetto Corsa Competizione\\Setups\\папка машины\\папка трассы___\n\n')
 start_message_letter_en = (f'Hello! It is bot-helper for the Asetto Corsa Competizione!\n\n'
-                           f'Choose your car and track for get track guide and setups.\n\n'
-                           f'For use setups open a archiv whit setups and moove files in:\n '
+                           f'Choose your car and track to get track guide and setups.\n\n'
+                           f'To apply the setups to the car, open the archive and place the files from it into the path:\n '
                            f'___C:\\users\\username\\Assetto Corsa Competizione\\Setups\\car folder\\track folder___\n\n')
 
 car_select_message = (f'Выбери машину:\n\n'
@@ -33,7 +33,7 @@ track_select_message_en = (f'Select a track:\n'
 
 calculator_selector = ('При примерном расчете, бот посчитает топливо исходя из примерного расхода топлива на круг и премерного времени круга для указанной трассы на автоиобиле класса GT3\n\n'
                        'При точном расчете будет необходимо указать ваш средний расход топлива на круг, а так же ваше среднее время круга\n')
-calculator_selector_en = ('With an approximate calculation, the bot will calculate the fuel based on the approximate fuel consumption per lap and the approximate lap time for the specified track on a GT3 class car\n\n'
+calculator_selector_en = ('For an approximate calculation, the bot will calculate the fuel based on the approximate fuel consumption per lap and the approximate lap time for the specified track on a GT3 class car\n\n'
                           'For an accurate calculation, you will need to indicate your average fuel consumption per lap, as well as your average lap time.')
 
 def accurate_calculator(fuel_flow, lap_time, race_time, answer):
@@ -49,12 +49,12 @@ def accurate_calculator(fuel_flow, lap_time, race_time, answer):
             f'Общее время гонки: \n'
             f'{int(race_time.total_seconds() // 3600) if race_time is not None else 'НЕТ ДАННЫХ'} часов \n'
             f'{round(int(race_time.total_seconds() // 60) - (int(race_time.total_seconds() // 3600) * 60), 3) if race_time is not None else 'НЕТ ДАННЫХ'} минут \n\n'
-            f'На эту гонку нужно залить *{round(answer, 3) if race_time is not None else 'НЕТ ДАННЫХ'}* литров')
+            f'На эту гонку нужно залить *{round(answer, 3) if answer is not None else 'НЕТ ДАННЫХ'}* литров')
 def accurate_calculator_en(fuel_flow, lap_time, race_time, answer):
     return (f'Enter the required data to calculate fuel!\n'
             f'Any parameter can be specified again\n\n'
             f'Current data:\n\n'
-            f'Fuel consumption per circle: \n'
+            f'Fuel consumption per lap: \n'
             f'*{fuel_flow if fuel_flow is not None else 'NO DATA'}* liters per lap\n\n'
             f'Average lap time: \n'
             f'*{int(lap_time.total_seconds() // 60) if lap_time is not None else 'NO DATA'}* minutes \n'
@@ -63,7 +63,7 @@ def accurate_calculator_en(fuel_flow, lap_time, race_time, answer):
             f'Race duration: \n'
             f'*{int(race_time.total_seconds() // 3600) if race_time is not None else 'NO DATA'}* hours \n'
             f'*{round(int(race_time.total_seconds() // 60) - (int(race_time.total_seconds() // 3600) * 60), 3) if race_time is not None else 'NO DATA'}* minutes \n\n'
-            f'You will need *{round(answer, 3) if race_time is not None else 'NO DATA'}* liters')
+            f'You will need *{round(answer, 3) if answer is not None else 'NO DATA'}* liters')
 
 get_flow = f'Введи средний расход топлива на круг, десятые отдели точкой:'
 get_flow_en = f'Enter the average fuel consumption per lap, separating tenths with a dot:'
@@ -88,7 +88,20 @@ abort_lap_time_en = (f'What you entered could not be converted into time lap, tr
                      f'Use `Min:Sec:Mic` format: \n'
                      f'If your lap time is less than a minute just use `Sec:Mic` format')
 
-abort_race_duration = (f'То что ты ввел не получилось преобрзовать во вреся продолжительности гонки\n\n'
+abort_race_duration = (f'То что ты ввел не получилось преобрзовать во время продолжительности гонки\n\n'
                                      f'Бот понимает форматы `Hour:Min` или просто `Min`')
 abort_race_duration_en = (f'What you entered could not be convert inte time of race duration\n\n'
                           f'Use `Hour:Min` or `Min` formats')
+def aprox_calculation(track, race_time, answer, lap_flow, lap_time):
+    return(f'Для примерного расчета топлива нужно указать трассу и длительность гонки. '
+            f'Бот из примерных значений времени круга и расхода посчитает топливо. '
+            f'Расчет будет очень примерным, не рекомендуем для важных заездов!\n\n'
+            f'Выбранная трасса: {track[1:] if track is not None else 'НЕТ ДАННЫХ'}\n'
+            f'Примерный расход на круг: {lap_flow if lap_flow is not None else 'НЕТ ДАННЫХ'}\n'
+            f'Примерное время круга: {lap_time if lap_time is not None else 'НЕТ ДАННЫХ'}\n\n'
+            f'Продолжительность гонки: \n'
+            f'{int(race_time.total_seconds() // 3600) if race_time is not None else 'НЕТ ДАННЫХ'} часов\n'
+            f'{round(int(race_time.total_seconds() // 60) - (int(race_time.total_seconds() // 3600) * 60), 3) if race_time is not None else 'НЕТ ДАННЫХ'} минут\n\n'
+            f'Тебе нужно залить: {round(answer, 3) if answer is not None else 'НЕТ ДАННЫХ'} литров')
+
+failed_aprox = 'У нас пока недостаточно данных для примерного расчета топлива на этой трассе'
