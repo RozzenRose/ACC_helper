@@ -51,7 +51,7 @@ async def select_eng(message: Message):
     await cmd_start(message)
 
 @main_root_router.message(F.text == message_descriptor.rus)
-async def select_eng(message: Message):
+async def select_rus(message: Message):
     user_language.put(message.from_user.id, 'RUS')
     await cmd_start(message)
 
@@ -111,11 +111,10 @@ async def track_guide(message: Message):
     track = user_selection.get(message.from_user.id, 'track')
     if car != None and track != None:
         async with engine.connect() as conn:
-            res = await conn.execute(text(f'select track_guide from "Info" '
-                                      f'where car_id = (select id from "Cars" '
-                                      f"                where car_name = '{car[1:]}') and"
-                                      f'      track_id = (select id from "Tracks"'
-                                      f"                where track_name = '{track[1:]}')"))
+            res = await conn.execute(text(f'select track_guide from "Info" as I '
+                                          f'inner join "Cars" as C on I.car_id = C.id '
+                                          f'inner join "Tracks" as T on I.track_id = T.id '
+                                          f"where C.car_name = '{car[1:]}' and T.track_name = '{track[1:]}'"))
             await message.answer(f'{res.first()[0]}')
     else:
         await cmd_start(message)
@@ -148,14 +147,16 @@ async def handler_selector(message: Message):
         case (id) if user_selection.get(id, 'car_selector'):
             if message.text[0] == '/':
                 user_selection.put(message.from_user.id, 'car', message.text)
+                user_selection.put(message.from_user.id, 'car_selector', False)
                 await cmd_start(message)
-            user_selection.put(message.from_user.id, 'car_selector', False)
 
         case (id) if user_selection.get(id, 'track_selector'):
             if message.text[0] == '/':
                 user_selection.put(message.from_user.id, 'track', message.text)
+                if user_data.get(id, 'calculator_works'):
+                    raise SkipHandler
+                user_selection.put(message.from_user.id, 'track_selector', False)
                 await cmd_start(message)
-            user_selection.put(message.from_user.id, 'track_selector', False)
 
     raise SkipHandler
 

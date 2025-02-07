@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+
 class UserSelection:
     data = {}
     _instance = None
@@ -13,10 +14,10 @@ class UserSelection:
         if user_id not in self.data:
             if user_id is not None:
                 self.data[user_id] = {
-                'car_selector': False,                #активирован режив выбора машины
-                'car': None,                          #машина
-                'track_selector': False,              #активирован режим выбора трассы
-                'track': None}                        #трек
+                    'car_selector': False,  # активирован режив выбора машины
+                    'car': None,  # машина
+                    'track_selector': False,  # активирован режим выбора трассы
+                    'track': None}  # трек
 
     def put(self, user_id, key, value):
         if user_id not in self.data:
@@ -33,7 +34,9 @@ class UserSelection:
         if user_id in self.data:
             del self.data[user_id]
 
+
 user_selection = UserSelection()
+
 
 class UserData:
     data = {}
@@ -48,11 +51,12 @@ class UserData:
         if user_id not in self.data:
             if user_id is not None:
                 self.data[user_id] = {
-                'calculator_works': False,            #флаг работы калькулятора
-                'calculator': (False, False, False),  #шаги алгортима рассчета топлива для точного калькулятора
-                'fuel_flow': None,                    #расход топлива на круг
-                'lap_time': None,                     #время круга
-                'race_time': None}                    #время гонки
+                    'calculator_works': False,  # флаг работы калькулятора
+                    'calculator': (False, False, False),  # шаги алгортима рассчета топлива для точного калькулятора
+                    'fuel_flow': None,  # расход топлива на круг
+                    'lap_time': None,  # время круга
+                    'race_time': None,  # время гонки
+                    'accure': False}  # точный / примерный
 
     def put(self, user_id, key, value):
         if user_id not in self.data:
@@ -69,7 +73,9 @@ class UserData:
         if user_id in self.data:
             del self.data[user_id]
 
+
 user_data = UserData()
+
 
 class LanguageSelect:
     user_language = {}
@@ -92,15 +98,11 @@ class LanguageSelect:
         user_data = self.user_language.get(user_id, 'ENG')
         return user_data
 
+
 user_language = LanguageSelect()
 
-class FuelCalculator:
-    @staticmethod
-    def accurate_calculation(fuel_flow: float, lap_time: timedelta, race_time: timedelta) -> float:
-        if None in (fuel_flow, lap_time, race_time):
-            return 'НЕТ ДАННЫХ'
-        return (int(race_time//lap_time) + 1) * fuel_flow
 
-    @staticmethod
-    def approximate_calculation():
-        pass
+def accurate_calculation(fuel_flow: float, lap_time: timedelta, race_time: timedelta) -> float:
+    if None in (fuel_flow, lap_time, race_time):
+        return None
+    return (int(race_time // lap_time) + 1) * fuel_flow

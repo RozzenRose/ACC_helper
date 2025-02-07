@@ -14,7 +14,7 @@ start_message_en = [[types.KeyboardButton(text=message_descriptor.calc_select_en
 calculator_select = [[types.KeyboardButton(text=message_descriptor.accur), types.KeyboardButton(text='Примерный')],
                     [types.KeyboardButton(text=message_descriptor.reboot)]]
 
-calculator_select_en = [[types.KeyboardButton(text=message_descriptor.accur_en), types.KeyboardButton(text='Aproximate')],
+calculator_select_en = [[types.KeyboardButton(text=message_descriptor.accur_en), types.KeyboardButton(text='Approximate')],
                         [types.KeyboardButton(text=message_descriptor.reboot_en)]]
 
 accure = [[types.KeyboardButton(text=message_descriptor.ff_get)],
@@ -32,3 +32,9 @@ get_info_calc = [[types.KeyboardButton(text=message_descriptor.back_to_accur)],
 
 get_info_calc_en = [[types.KeyboardButton(text=message_descriptor.back_to_accur_en)],
               [types.KeyboardButton(text=message_descriptor.reboot_en)]]
+
+get_ap_calc = [[types.KeyboardButton(text=message_descriptor.track_select)],
+                [types.KeyboardButton(text=message_descriptor.rt_get)],
+                [types.KeyboardButton(text=message_descriptor.reboot)]]
+
+only_back = [[types.KeyboardButton(text=message_descriptor.reboot)]]
