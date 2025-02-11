@@ -2,9 +2,6 @@ from datetime import timedelta
 
 
 class Data:
-    data = {}
-    _instance = None
-
     def __new__(cls, *arg, **kwargs):
         if cls._instance is None:
             cls._instance = object.__new__(cls)
@@ -27,6 +24,9 @@ class Data:
 
 
 class UserSelection(Data):
+    data = {}
+    _instance = None
+
     def __init__(self, user_id=None):
         if user_id not in self.data:
             if user_id is not None:
@@ -37,10 +37,10 @@ class UserSelection(Data):
                     'track': None}  # трек
 
 
-user_selection = UserSelection()
-
-
 class UserData(Data):
+    data = {}
+    _instance = None
+
     def __init__(self, user_id=None):
         if user_id not in self.data:
             if user_id is not None:
@@ -53,11 +53,9 @@ class UserData(Data):
                     'accure': False}  # точный / примерный
 
 
-user_data = UserData()
-
-
 class LanguageSelect(Data):
     user_language = {}
+    _instance = None
 
     def __init__(self, user_id=None):
         if user_id not in self.user_language:
@@ -73,6 +71,8 @@ class LanguageSelect(Data):
 
 
 user_language = LanguageSelect()
+user_data = UserData()
+user_selection = UserSelection()
 
 
 def accurate_calculation(fuel_flow: float, lap_time: timedelta, race_time: timedelta) -> float:

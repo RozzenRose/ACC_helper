@@ -13,23 +13,43 @@ car_select_message = (f'Выбери машину:\n\n'
                         f'Ferrari:\n'
                         f'/Ferrari_296_GT3\n'
                         f'Lamborghini:\n'
-                        f'/Lamborghini_Huracan_GT3_EVO_2\n\n')
+                        f'/Lamborghini_Huracan_GT3_EVO_2\n'
+                        f'BMW:\n'
+                        f'/BMW_M4_GT3\n'
+                        f'McLaren:\n'
+                        f'/McLaren_720s_EVO_GT3\n'
+                        f'Ford:\n'
+                        f'/Ford_Mustang_GT3')
 car_select_message_en = (f'Select a car:\n\n'
                         f'Porsche:\n'
                         f'/Porsche_922_GT3R\n'
                         f'Ferrari:\n'
                         f'/Ferrari_296_GT3\n'
                         f'Lamborghini:\n'
-                        f'/Lamborghini_Huracan_GT3_EVO_2\n\n')
+                        f'/Lamborghini_Huracan_GT3_EVO_2\n'
+                        f'BMW:\n'
+                        f'/BMW_M4_GT3\n'
+                        f'McLaren:\n'
+                        f'/McLaren_720s_EVO_GT3\n'
+                        f'Ford:\n'
+                        f'/Ford_Mustang_GT3')
 
 track_select_message = (f'Выбери трассу:\n'
                         f'/Spa_Francorchamps\n'
                         f'/Monza\n'
-                        f'/Misano')
+                        f'/Misano\n'
+                        f'/Hungaroring\n'
+                        f'/Watkins_Glen\n'
+                        f'/Mount_Panorama\n'
+                        f'/Imola')
 track_select_message_en = (f'Select a track:\n'
                         f'/Spa_Francorchamps\n'
                         f'/Monza\n'
-                        f'/Misano')
+                        f'/Misano\n'
+                        f'/Hungaroring\n'
+                        f'/Watkins_Glen\n'
+                        f'/Mount_Panorama\n'
+                        f'/Imola')
 
 calculator_selector = ('При примерном расчете, бот посчитает топливо исходя из примерного расхода топлива на круг и премерного времени круга для указанной трассы на автоиобиле класса GT3\n\n'
                        'При точном расчете будет необходимо указать ваш средний расход топлива на круг, а так же ваше среднее время круга\n')
@@ -118,3 +138,6 @@ def aprox_calculation_en(track, race_time, answer, lap_flow, lap_time):
 
 failed_aprox = 'У нас пока недостаточно данных для примерного расчета топлива на этой трассе'
 failed_aprox_en = "We don't have enough data yet to make an approximate calculation."
+
+fail_tg = f'У нас пока нет трек гайдов для этой трассы под этот автомобиль'
+fail_tg_en = f"We don't have track guide for this car on this track yet"

@@ -156,9 +156,11 @@ async def aprox_info_get(message: Message):
         await message.answer(messages.aprox_calculation_en(track, race_time, answer, aproximate_flow, aproximate_time),
                              reply_markup=keyboard)
 
+
 @calculator_router.message(F.text == message_descriptor.aprox_en)
 async def aprox_into_get(message: Message):
     await aprox_info_get(message)
+
 
 # специальный хендлер для обработки текстовых сообщений,
 # которые не являются командами или текстом, сгенерированным нажатием кнопок
@@ -167,7 +169,8 @@ async def aprox_into_get(message: Message):
 @calculator_router.message()
 async def handler_all_mess(message: Message):
     match (message.from_user.id):
-        case (id) if user_data.get(id, 'calculator')[0]:  # сообщение содержит топливо на круг, которое используется в точном калькуляторе
+        case (id) if user_data.get(id, 'calculator')[
+            0]:  # сообщение содержит топливо на круг, которое используется в точном калькуляторе
             try:
                 user_data.put(id, 'fuel_flow', float(message.text))
                 await accure_info_get(message)
@@ -191,11 +194,9 @@ async def handler_all_mess(message: Message):
                 await accure_info_get(message)
             except ValueError:
                 if user_language.get(message.from_user.id) == 'RUS':
-                    await message.answer(messages.abort_lap_time,
-                                         parse_mode='Markdown', resize_keyboard=True)
+                    await message.answer(messages.abort_lap_time, parse_mode='Markdown', resize_keyboard=True)
                 else:
-                    await message.answer(messages.abort_lap_time_en,
-                                         parse_mode='Markdown', resize_keyboard=True)
+                    await message.answer(messages.abort_lap_time_en, parse_mode='Markdown', resize_keyboard=True)
 
         case (id) if user_data.get(id, 'calculator')[2]:  # сообщение содержит длительность гонки
             try:
