@@ -1,11 +1,18 @@
-start_message_letter = (f'Привет, это бот-помошник для игры Asetto Corsa Competizione!\n\n'
-                        f'Для того чтобы получить сетапы или трекгайды, сначала нужно выбрать трассу и автомобиль.\n\n'
-                        f'Для того что бы применить сетапы к машине, открой архив и помести файлы из него в:\n '
-                        f'___C:\\users\\username\\Assetto Corsa Competizione\\Setups\\папка машины\\папка трассы___\n\n')
-start_message_letter_en = (f'Hello! It is bot-helper for the Asetto Corsa Competizione!\n\n'
-                           f'Choose your car and track to get track guide and setups.\n\n'
-                           f'To apply the setups to the car, open the archive and place the files from it into the path:\n '
-                           f'___C:\\users\\username\\Assetto Corsa Competizione\\Setups\\car folder\\track folder___\n\n')
+def start_message_letter(car, track):
+    return (f'Привет, это бот-помошник для игры Asetto Corsa Competizione!\n\n'
+            f'Для того чтобы получить сетапы или трекгайды, сначала нужно выбрать трассу и автомобиль.\n\n'
+            f'Для того что бы применить сетапы к машине, открой архив и помести файлы из него в:\n '
+            f'___C:\\users\\username\\Assetto Corsa Competizione\\Setups\\папка машины\\папка трассы___\n\n'
+            f'🏎️ Текущая машина:   *{car[1:] if car != None else "Нет выбранной машины"}*\n'
+            f'🏁 Текущая трасса:   *{track[1:] if track != None else "Нет выбранной трассы"}*')
+
+def start_message_letter_en(car, track):
+    return (f'Hello! It is bot-helper for the Asetto Corsa Competizione!\n\n'
+            f'Choose your car and track to get track guide and setups.\n\n'
+            f'To apply the setups to the car, open the archive and place the files from it into the path:\n '
+            f'___C:\\users\\username\\Assetto Corsa Competizione\\Setups\\car folder\\track folder___\n\n'
+            f'🏎️ Current car:   *{car[1:] if car != None else "No selected car"}*\n'
+            f'🏁 Current track:   *{track[1:] if track != None else "No selected track"}*')
 
 car_select_message = (f'Выбери машину:\n\n'
                         f'Porsche:\n'
