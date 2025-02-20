@@ -9,7 +9,7 @@ dp = Dispatcher()
 
 async def main(): #роутеры действительно вызываются в порядке, который указан тут
     dp.include_router(main_root_router)  #роутер для основного рута
-    dp.include_router(calculator_router) #роутер для калькулятора
+    dp.include_router(calculator_router) #роутер для калькулятор
     await dp.start_polling(bot)          #запуск диспетчера
 
 if __name__ == '__main__':

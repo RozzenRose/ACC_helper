@@ -79,6 +79,9 @@ async def cash_drop(message: Message):
         pass
     await cmd_start(message)
 
+@main_root_router.message(F.text == message_descriptor.drop_en)
+async def cash_drop_en(message: Message):
+    await cash_drop(message)
 
 # кнопка 'В начало'
 @main_root_router.message(F.text == message_descriptor.reboot)
@@ -99,6 +102,7 @@ async def reboot_en(message: Message):
 #/start -> выбор машины
 @main_root_router.message(F.text == message_descriptor.car_select)
 async def car_selector(message: Message):
+    user_selection.put(message.from_user.id, 'track_selector', False)
     user_selection.put(message.from_user.id, 'car_selector', True)
     await message.answer(messages.car_select_message if user_language.get(
         message.from_user.id) == 'RUS' else messages.car_select_message_en)
@@ -113,6 +117,7 @@ async def car_selector_en(message: Message):
 # /start -> Выбор трассы
 @main_root_router.message(F.text == message_descriptor.track_select)
 async def track_selector(message: Message):
+    user_selection.put(message.from_user.id, 'car_selector', False)
     user_selection.put(message.from_user.id, 'track_selector', True)
     await message.answer(messages.track_select_message if user_language.get(
         message.from_user.id) == 'RUS' else messages.track_select_message_en)
@@ -183,6 +188,7 @@ async def handler_selector(message: Message):
         case (id) if user_selection.get(id, 'car_selector'):
             if message.text[0] == '/':
                 user_selection.put(message.from_user.id, 'car', message.text)
+                user_selection.put(message.from_user.id, 'track_selector', False)
                 user_selection.put(message.from_user.id, 'car_selector', False)
                 await cmd_start(message)
 
@@ -192,6 +198,9 @@ async def handler_selector(message: Message):
                 if user_data.get(id, 'calculator_works'):
                     raise SkipHandler
                 user_selection.put(message.from_user.id, 'track_selector', False)
+                user_selection.put(message.from_user.id, 'car_selector', False)
                 await cmd_start(message)
 
+    user_selection.put(message.from_user.id, 'track_selector', False)
+    user_selection.put(message.from_user.id, 'car_selector', False)
     raise SkipHandler
