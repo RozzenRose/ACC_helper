@@ -1,5 +1,6 @@
-### ACC_Helper
+﻿### ACC_Helper
 It is bot for Telegram!
+@acc_sim_helper_bot
 
 ![image](https://github.com/user-attachments/assets/0e6f1035-e19f-4889-9537-78cca804673e)
 
