@@ -76,7 +76,7 @@ def accurate_calculator(fuel_flow, lap_time, race_time, answer):
             f'Общее время гонки: \n'
             f'{int(race_time.total_seconds() // 3600) if race_time is not None else 'НЕТ ДАННЫХ'} часов \n'
             f'{round(int(race_time.total_seconds() // 60) - (int(race_time.total_seconds() // 3600) * 60), 3) if race_time is not None else 'НЕТ ДАННЫХ'} минут \n\n'
-            f'На эту гонку нужно залить *{round(answer, 3) if answer is not None else 'НЕТ ДАННЫХ'}* литров'
+            f'На эту гонку нужно залить *{round(answer, 3) if answer is not None else 'НЕТ ДАННЫХ'}* литров\n'
             f'Если предусмотрен разогревочный круг, залить нужно *{(round(answer, 3) + fuel_flow) if answer is not None else 'НЕТ ДАННЫХ'} литров*')
 def accurate_calculator_en(fuel_flow, lap_time, race_time, answer):
     return (f'Enter the required data to calculate fuel!\n'
@@ -91,7 +91,7 @@ def accurate_calculator_en(fuel_flow, lap_time, race_time, answer):
             f'Race duration: \n'
             f'*{int(race_time.total_seconds() // 3600) if race_time is not None else 'NO DATA'}* hours \n'
             f'*{round(int(race_time.total_seconds() // 60) - (int(race_time.total_seconds() // 3600) * 60), 3) if race_time is not None else 'NO DATA'}* minutes \n\n'
-            f'You need to fill up *{round(answer, 3) if answer is not None else 'NO DATA'}* liters'
+            f'You need to fill up *{round(answer, 3) if answer is not None else 'NO DATA'}* liters\n'
             f'If a warm-up circle is provided, you will need *{(round(answer, 3) + fuel_flow) if answer is not None else 'НЕТ ДАННЫХ'}* litres')
 
 get_flow = f'Введи средний расход топлива на круг, десятые отдели точкой:'
