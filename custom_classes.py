@@ -1,5 +1,5 @@
 from datetime import timedelta
-
+import math
 
 class Data:
     def __new__(cls, *arg, **kwargs):
@@ -78,4 +78,4 @@ user_selection = UserSelection()
 def accurate_calculation(fuel_flow: float, lap_time: timedelta, race_time: timedelta) -> float:
     if None in (fuel_flow, lap_time, race_time):
         return None
-    return (int(race_time // lap_time) + 1) * fuel_flow
+    return (math.ceil(race_time // lap_time)) * fuel_flow
