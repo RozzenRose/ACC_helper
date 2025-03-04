@@ -19,13 +19,13 @@ calculator_router = Router()
 @calculator_router.message(F.text == message_descriptor.calc_select)
 async def fuel_calc(message: Message):
     user_data.put(message.from_user.id, 'calculator_works', True)
-    if user_language.get(message.from_user.id) == 'RUS':
+    if await user_language.get(message.from_user.id) == 'RUS':
         keyboard = types.ReplyKeyboardMarkup(keyboard=keyboards.calculator_select, resize_keyboard=True,
                                              input_field_placeholder='Выбери тип калькулятора')
     else:
         keyboard = types.ReplyKeyboardMarkup(keyboard=keyboards.calculator_select_en, resize_keyboard=True,
                                              input_field_placeholder='Select a type of calculator')
-    await message.answer(messages.calculator_selector if user_language.get(
+    await message.answer(messages.calculator_selector if await user_language.get(
         message.from_user.id) == 'RUS' else messages.calculator_selector_en, reply_markup=keyboard)
 
 
@@ -41,7 +41,7 @@ async def accure_info_get(message: Message):
     fuel_flow = user_data.get(message.from_user.id, 'fuel_flow')
     lap_time = user_data.get(message.from_user.id, 'lap_time')
     race_time = user_data.get(message.from_user.id, 'race_time')
-    if user_language.get(message.from_user.id) == 'RUS':
+    if await user_language.get(message.from_user.id) == 'RUS':
         keyboard = types.ReplyKeyboardMarkup(keyboard=keyboards.accure, resize_keyboard=True)
         answer = accurate_calculation(fuel_flow, lap_time, race_time)
         await message.answer(messages.accurate_calculator(fuel_flow, lap_time, race_time, answer),
@@ -73,12 +73,12 @@ async def accure_info_get2_en(message: Message):
 @calculator_router.message(F.text == message_descriptor.ff_get)  ## Запрос топлива на круг
 async def fuel_flow_get(message: Message):
     fuel_flow = user_data.put(message.from_user.id, 'calculator', (True, False, False))
-    if user_language.get(message.from_user.id) == 'RUS':
+    if await user_language.get(message.from_user.id) == 'RUS':
         keyboard = types.ReplyKeyboardMarkup(keyboard=keyboards.get_info_calc, resize_keyboard=True)
     else:
         keyboard = types.ReplyKeyboardMarkup(keyboard=keyboards.get_info_calc_en, resize_keyboard=True)
     await message.answer(
-        messages.get_flow if user_language.get(message.from_user.id) == 'RUS' else messages.get_flow_en,
+        messages.get_flow if await user_language.get(message.from_user.id) == 'RUS' else messages.get_flow_en,
         reply_markup=keyboard)
 
 
@@ -91,12 +91,12 @@ async def fuel_flow_get_en(message: Message):
 @calculator_router.message(F.text == message_descriptor.lt_get)  ## запрос среднего времени круга
 async def lap_time_get(message: Message):
     lap_time = user_data.put(message.from_user.id, 'calculator', (False, True, False))
-    if user_language.get(message.from_user.id) == 'RUS':
+    if await user_language.get(message.from_user.id) == 'RUS':
         keyboard = types.ReplyKeyboardMarkup(keyboard=keyboards.get_info_calc, resize_keyboard=True)
     else:
         keyboard = types.ReplyKeyboardMarkup(keyboard=keyboards.get_info_calc_en, resize_keyboard=True)
     await message.answer(
-        messages.get_lap_time if user_language.get(message.from_user.id) == 'RUS' else messages.get_lap_time_en,
+        messages.get_lap_time if await user_language.get(message.from_user.id) == 'RUS' else messages.get_lap_time_en,
         parse_mode='Markdown', resize_keyboard=True)
 
 
@@ -109,11 +109,11 @@ async def lap_time_get_en(message: Message):
 @calculator_router.message(F.text == message_descriptor.rt_get)  ## запрос длительности гонки
 async def race_time_get(message: Message):
     race_time = user_data.put(message.from_user.id, 'calculator', (False, False, True))
-    if user_language.get(message.from_user.id) == 'RUS':
+    if await user_language.get(message.from_user.id) == 'RUS':
         keyboard = types.ReplyKeyboardMarkup(keyboard=keyboards.get_info_calc, resize_keyboard=True)
     else:
         keyboard = types.ReplyKeyboardMarkup(keyboard=keyboards.get_info_calc_en, resize_keyboard=True)
-    await message.answer(messages.get_race_duration if user_language.get(
+    await message.answer(messages.get_race_duration if await user_language.get(
         message.from_user.id) == 'RUS' else messages.get_race_duration_en,
                          parse_mode='Markdown', resize_keyboard=True)
 
@@ -139,7 +139,7 @@ async def aprox_info_get(message: Message):
         aproximate_flow = res[0]
         aproximate_time = res[1]
         if aproximate_time is None or aproximate_flow is None:
-            if user_language.get(message.from_user.id) == 'RUS':
+            if await user_language.get(message.from_user.id) == 'RUS':
                 keyboard = types.ReplyKeyboardMarkup(keyboard=keyboards.only_back, resize_keyboard=True)
                 await message.answer(messages.failed_aprox, reply_markup=keyboard)
             else:
@@ -147,7 +147,7 @@ async def aprox_info_get(message: Message):
                 await message.answer(messages.failed_aprox_en, reply_markup=keyboard)
             return
     answer = accurate_calculation(aproximate_flow, aproximate_time, race_time)
-    if user_language.get(message.from_user.id) == 'RUS':
+    if await user_language.get(message.from_user.id) == 'RUS':
         keyboard = types.ReplyKeyboardMarkup(keyboard=keyboards.get_ap_calc, resize_keyboard=True)
         await message.answer(messages.aprox_calculation(track, race_time, answer, aproximate_flow, aproximate_time),
                              reply_markup=keyboard)
@@ -175,7 +175,7 @@ async def handler_all_mess(message: Message):
                 user_data.put(id, 'fuel_flow', float(message.text))
                 await accure_info_get(message)
             except ValueError:
-                if user_language.get(message.from_user.id) == 'RUS':
+                if await user_language.get(message.from_user.id) == 'RUS':
                     await message.answer(messages.abort_flow)
                 else:
                     await message.answer(messages.abort_flow_en)
@@ -193,7 +193,7 @@ async def handler_all_mess(message: Message):
                 user_data.put(id, 'lap_time', lap_time)
                 await accure_info_get(message)
             except ValueError:
-                if user_language.get(message.from_user.id) == 'RUS':
+                if await user_language.get(message.from_user.id) == 'RUS':
                     await message.answer(messages.abort_lap_time, parse_mode='Markdown', resize_keyboard=True)
                 else:
                     await message.answer(messages.abort_lap_time_en, parse_mode='Markdown', resize_keyboard=True)
@@ -213,7 +213,7 @@ async def handler_all_mess(message: Message):
                 else:
                     await aprox_info_get(message)
             except ValueError:
-                if user_language.get(message.from_user.id) == 'RUS':
+                if await user_language.get(message.from_user.id) == 'RUS':
                     await message.answer(messages.abort_race_duration, parse_mode='Markdown', resize_keyboard=True)
                 else:
                     await message.answer(messages.abort_race_duration_en, parse_mode='Markdown', resize_keyboard=True)

@@ -22,16 +22,17 @@ async def cmd_start(message: Message):
     user_selection.__init__(user_id=message.from_user.id)  # заносим ползователя в объект хранения языка
     user_data.__init__(user_id=message.from_user.id)  # заносим ползователя в объект хранения данных
     user_language.__init__(user_id=message.from_user.id)  # заносим ползователя в объект хранения языка
-    await DB_func.insert_user_data(message.from_user.username) #запомним имя пользователся
+    #await DB_func.insert_user_data(message.from_user.username) #запомним имя пользователся
     car = user_selection.get(message.from_user.id, 'car')
     track = user_selection.get(message.from_user.id, 'track')
-    if user_language.get(message.from_user.id) is None:
+    if await user_language.get(message.from_user.id) is None:
+
         b_conf = [
             [types.KeyboardButton(text=message_descriptor.eng), types.KeyboardButton(text=message_descriptor.rus)]]
         keyboard = types.ReplyKeyboardMarkup(keyboard=b_conf, resize_keyboard=True)
         await message.answer(f'Select your language:\n'
                              f'Выбери язык:', reply_markup=keyboard, parse_mode='Markdown')
-    elif user_language.get(message.from_user.id) == 'RUS':
+    elif await user_language.get(message.from_user.id) == 'RUS':
         # создаем клавиатуру с клавишами
         keyboard = types.ReplyKeyboardMarkup(keyboard=keyboards.start_message, resize_keyboard=True,
                                              input_field_placeholder='Чем займемся сегодня?')
@@ -48,24 +49,24 @@ async def cmd_start(message: Message):
 # Выбор языка: ENG
 @main_root_router.message(F.text == message_descriptor.eng)
 async def select_eng(message: Message):
-    user_language.put(message.from_user.id, 'ENG')
+    await user_language.put(message.from_user.id, message.from_user.username, 'ENG')
     await cmd_start(message)
 
 
 # Выбор языка: RUS
 @main_root_router.message(F.text == message_descriptor.rus)
 async def select_rus(message: Message):
-    user_language.put(message.from_user.id, 'RUS')
+    await user_language.put(message.from_user.id, message.from_user.username, 'RUS')
     await cmd_start(message)
 
 
-# Выбор языка: смента языка
+# Выбор языка: смена языка
 @main_root_router.message(F.text == message_descriptor.leng_swap)
 async def len_swap(message: Message):
-    if user_language.get(message.from_user.id) == 'ENG':
-        user_language.put(message.from_user.id, 'RUS')
+    if await user_language.get(message.from_user.id) == 'ENG':
+        await user_language.put(message.from_user.id, message.from_user.username, 'RUS')
     else:
-        user_language.put(message.from_user.id, 'ENG')
+        await user_language.put(message.from_user.id, message.from_user.username, 'ENG')
     await cmd_start(message)
 
 
@@ -119,8 +120,9 @@ async def car_selector_en(message: Message):
 async def track_selector(message: Message):
     user_selection.put(message.from_user.id, 'car_selector', False)
     user_selection.put(message.from_user.id, 'track_selector', True)
-    await message.answer(messages.track_select_message if user_language.get(
-        message.from_user.id) == 'RUS' else messages.track_select_message_en)
+    await message.answer(messages.track_select_message
+                   if await user_language.get(message.from_user.id) == 'RUS'
+                   else messages.track_select_message_en)
 
 
 #/start -> track select
@@ -144,11 +146,11 @@ async def track_guide(message: Message):
             answer = res.first()[0]
             if answer is None or answer == '':
                 await message.answer(
-                    messages.fail_tg if user_language.get(message.from_user.id) == 'RUS' else messages.fail_tg_en)
+                    messages.fail_tg if await user_language.get(message.from_user.id) == 'RUS' else messages.fail_tg_en)
             await message.answer(f'{answer}')
         except TypeError:
             await message.answer(
-                messages.fail_tg if user_language.get(message.from_user.id) == 'RUS' else messages.fail_tg_en)
+                messages.fail_tg if await user_language.get(message.from_user.id) == 'RUS' else messages.fail_tg_en)
     else:
         await cmd_start(message)
 
@@ -169,7 +171,7 @@ async def setup(message: Message):
             setup_path = FSInputFile(f'setups/{car[1:]}/{track[1:]}/setups.zip')
             await message.answer_document(setup_path)
         except:
-            await message.answer('У нас пока нет сетапов для этой машины и трассы' if user_language.get(
+            await message.answer('У нас пока нет сетапов для этой машины и трассы' if await user_language.get(
                 message.from_user.id) == 'RUS' else "We don't have setups for this car on this track yet")
     else:
         await cmd_start(message)

@@ -1,5 +1,7 @@
 from datetime import timedelta
 import math
+import asyncio
+from DB_settings.DB_func import insert_user_data, select_user_leng
 
 class Data:
     def __new__(cls, *arg, **kwargs):
@@ -60,13 +62,17 @@ class LanguageSelect(Data):
     def __init__(self, user_id=None):
         if user_id not in self.user_language:
             if user_id is not None:
+                #запросить в базе данных язык, если его там нет, вернется None
                 self.user_language[user_id] = None
 
-    def put(self, user_id, value):
+    async def put(self, user_id, username, value):
         self.user_language[user_id] = value
+        await insert_user_data(user_id, username, value)
 
-    def get(self, user_id):
-        user_data = self.user_language.get(user_id, 'ENG')
+    async def get(self, user_id):
+        user_data = self.user_language.get(user_id, None) #Проверяем наличие данных а оперативке
+        if user_data is None: #если данных в оперативке нет
+            user_data = await select_user_leng(user_id) #проверяем наличие данных в СУБД
         return user_data
 
 

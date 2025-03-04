@@ -41,7 +41,9 @@ car_select_message_en = (f'Select a car:\n\n'
                         f'McLaren:\n'
                         f'/McLaren_720s_EVO_GT3\n'
                         f'Ford:\n'
-                        f'/Ford_Mustang_GT3')
+                        f'/Ford_Mustang_GT3\n'
+                        f'Aston Martin:\n'
+                        f'/Aston_Martin_V8_Vantage\n')
 
 track_select_message = (f'Выбери трассу:\n'
                         f'/Spa_Francorchamps\n'
