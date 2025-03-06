@@ -169,10 +169,12 @@ async def aprox_into_get(message: Message):
 @calculator_router.message()
 async def handler_all_mess(message: Message):
     match (message.from_user.id):
-        case (id) if user_data.get(id, 'calculator')[
-            0]:  # сообщение содержит топливо на круг, которое используется в точном калькуляторе
+        case (id) if user_data.get(id, 'calculator')[0]:  # сообщение содержит топливо на круг, которое используется в точном калькуляторе
             try:
-                user_data.put(id, 'fuel_flow', float(message.text))
+                F_flow = float(message.text)
+                if F_flow < 0:
+                    raise ValueError
+                user_data.put(id, 'fuel_flow', F_flow)
                 await accure_info_get(message)
             except ValueError:
                 if await user_language.get(message.from_user.id) == 'RUS':
@@ -183,12 +185,17 @@ async def handler_all_mess(message: Message):
         case (id) if user_data.get(id, 'calculator')[1]:  # сообщение содержит время круга
             try:
                 split_time = [int(item) for item in message.text.split(':')]
+                for num in split_time:
+                    if num < 0:
+                        raise ValueError
                 if len(split_time) == 2:
                     lap_time = timedelta(seconds=split_time[0], milliseconds=int(str(split_time[1]).ljust(3, '0')))
                 elif len(split_time) == 3:
                     lap_time = timedelta(minutes=split_time[0], seconds=split_time[1],
                                          milliseconds=int(str(split_time[2]).ljust(3, '0')))
                 else:
+                    raise ValueError
+                if lap_time < timedelta(0):
                     raise ValueError
                 user_data.put(id, 'lap_time', lap_time)
                 await accure_info_get(message)
@@ -201,6 +208,9 @@ async def handler_all_mess(message: Message):
         case (id) if user_data.get(id, 'calculator')[2]:  # сообщение содержит длительность гонки
             try:
                 split_race_time = [int(item) for item in message.text.split(':')]
+                for num in split_race_time:
+                    if num < 0:
+                        raise ValueError
                 if len(split_race_time) == 1:
                     race_time = timedelta(minutes=split_race_time[0])
                 elif len(split_race_time) == 2:
