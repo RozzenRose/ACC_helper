@@ -1,72 +1,83 @@
-def start_message_letter(car, track):
-    return (f'Привет, это бот-помошник для игры Asetto Corsa Competizione!\n\n'
-            f'Для того чтобы получить сетапы или трекгайды, сначала нужно выбрать трассу и автомобиль.\n\n'
-            f'Для того что бы применить сетапы к машине, открой архив и помести файлы из него в:\n '
-            f'___C:\\users\\username\\Assetto Corsa Competizione\\Setups\\папка машины\\папка трассы___\n\n'
-            f'🏎️ Текущая машина:   *{car[1:] if car != None else "Нет выбранной машины"}*\n'
-            f'🏁 Текущая трасса:   *{track[1:] if track != None else "Нет выбранной трассы"}*')
+def start_msg_placeholder(leng):
+    if leng == 'RUS':
+        return 'Чем займемся сегодня?'
+    else:
+        return 'What do you want to do?'
 
-start_msg_placeholder = 'Чем займемся сегодня?'
-start_msg_placeholder_en = 'What do you want to do?'
-
-def start_message_letter_en(car, track):
-    return (f'Hello! It is bot-helper for the Asetto Corsa Competizione!\n\n'
-            f'In order to get your track guide and setups, you need to choose your car and track:\n '
-            f'In order to apply the setups to the car, open the archive and place the files from it into the path:\n'
-            f'___C:\\users\\username\\Assetto Corsa Competizione\\Setups\\car folder\\track folder___\n\n'
-            f'🏎️ Current car:   *{car[1:] if car != None else "No selected car"}*\n'
-            f'🏁 Current track:   *{track[1:] if track != None else "No selected track"}*')
+def start_message_letter(car, track, lang):
+    if lang == 'RUS':
+        return (f'Привет, это бот-помошник для игры Asetto Corsa Competizione!\n\n'
+                f'Для того чтобы получить сетапы или трекгайды, сначала нужно выбрать трассу и автомобиль.\n\n'
+                f'Для того что бы применить сетапы к машине, открой архив и помести файлы из него в:\n '
+                f'___C:\\users\\username\\Assetto Corsa Competizione\\Setups\\папка машины\\папка трассы___\n\n'
+                f'🏎️ Текущая машина:   *{car[1:] if car != None else "Нет выбранной машины"}*\n'
+                f'🏁 Текущая трасса:   *{track[1:] if track != None else "Нет выбранной трассы"}*')
+    else:
+        return (f'Hello! It is bot-helper for the Asetto Corsa Competizione!\n\n'
+                f'In order to get your track guide and setups, you need to choose your car and track:\n '
+                f'In order to apply the setups to the car, open the archive and place the files from it into the path:\n'
+                f'___C:\\users\\username\\Assetto Corsa Competizione\\Setups\\car folder\\track folder___\n\n'
+                f'🏎️ Current car:   *{car[1:] if car != None else "No selected car"}*\n'
+                f'🏁 Current track:   *{track[1:] if track != None else "No selected track"}*')
 
 lang_select = (f'Select your language:\n'
                f'Выбери язык:')
 
-car_select_message = (f'Выбери машину:\n\n'
-                        f'Porsche:\n'
-                        f'/Porsche_922_GT3R\n'
-                        f'Ferrari:\n'
-                        f'/Ferrari_296_GT3\n'
-                        f'Lamborghini:\n'
-                        f'/Lamborghini_Huracan_GT3_EVO_2\n'
-                        f'BMW:\n'
-                        f'/BMW_M4_GT3\n'
-                        f'McLaren:\n'
-                        f'/McLaren_720s_EVO_GT3\n'
-                        f'Ford:\n'
-                        f'/Ford_Mustang_GT3\n'
-                        f'Aston Martin:\n'
-                        f'/Aston_Martin_V8_Vantage\n')
-car_select_message_en = (f'Select a car:\n\n'
-                        f'Porsche:\n'
-                        f'/Porsche_922_GT3R\n'
-                        f'Ferrari:\n'
-                        f'/Ferrari_296_GT3\n'
-                        f'Lamborghini:\n'
-                        f'/Lamborghini_Huracan_GT3_EVO_2\n'
-                        f'BMW:\n'
-                        f'/BMW_M4_GT3\n'
-                        f'McLaren:\n'
-                        f'/McLaren_720s_EVO_GT3\n'
-                        f'Ford:\n'
-                        f'/Ford_Mustang_GT3\n'
-                        f'Aston Martin:\n'
-                        f'/Aston_Martin_V8_Vantage\n')
+def car_select_message(lang):
+    if lang == 'RUS':
+        return (f'Выбери машину:\n\n'
+                f'Porsche:\n'
+                f'/Porsche_922_GT3R\n'
+                f'Ferrari:\n'
+                f'/Ferrari_296_GT3\n'
+                f'Lamborghini:\n'
+                f'/Lamborghini_Huracan_GT3_EVO_2\n'
+                f'BMW:\n'
+                f'/BMW_M4_GT3\n'
+                f'McLaren:\n'
+                f'/McLaren_720s_EVO_GT3\n'
+                f'Ford:\n'
+                f'/Ford_Mustang_GT3\n'
+                f'Aston Martin:\n'
+                f'/Aston_Martin_V8_Vantage\n')
+    else:
+        return (f'Select a car:\n\n'
+                f'Porsche:\n'
+                f'/Porsche_922_GT3R\n'
+                f'Ferrari:\n'
+                f'/Ferrari_296_GT3\n'
+                f'Lamborghini:\n'
+                f'/Lamborghini_Huracan_GT3_EVO_2\n'
+                f'BMW:\n'
+                f'/BMW_M4_GT3\n'
+                f'McLaren:\n'
+                f'/McLaren_720s_EVO_GT3\n'
+                f'Ford:\n'
+                f'/Ford_Mustang_GT3\n'
+                f'Aston Martin:\n'
+                f'/Aston_Martin_V8_Vantage\n')
 
-track_select_message = (f'Выбери трассу:\n'
-                        f'/Spa_Francorchamps\n'
-                        f'/Monza\n'
-                        f'/Misano\n'
-                        f'/Hungaroring\n'
-                        f'/Watkins_Glen\n'
-                        f'/Mount_Panorama\n'
-                        f'/Imola')
-track_select_message_en = (f'Select a track:\n'
-                        f'/Spa_Francorchamps\n'
-                        f'/Monza\n'
-                        f'/Misano\n'
-                        f'/Hungaroring\n'
-                        f'/Watkins_Glen\n'
-                        f'/Mount_Panorama\n'
-                        f'/Imola')
+def track_select_message(lang):
+    if lang == 'RUS':
+        return (f'Выбери трассу:\n'
+                f'/Spa_Francorchamps\n'
+                f'/Monza\n'
+                f'/Misano\n'
+                f'/Hungaroring\n'
+                f'/Watkins_Glen\n'
+                f'/Mount_Panorama\n'
+                f'/Imola\n'
+                f'/Nur')
+    else:
+        return (f'Select a track:\n'
+                f'/Spa_Francorchamps\n'
+                f'/Monza\n'
+                f'/Misano\n'
+                f'/Hungaroring\n'
+                f'/Watkins_Glen\n'
+                f'/Mount_Panorama\n'
+                f'/Imola\n'
+                f'/Nur')
 
 calculator_selector = ('При примерном расчете, бот посчитает топливо исходя из примерного расхода топлива на круг и премерного времени круга для указанной трассы на автоиобиле класса GT3\n\n'
                        'При точном расчете будет необходимо указать ваш средний расход топлива на круг, а так же ваше среднее время круга\n')
@@ -158,8 +169,14 @@ def aprox_calculation_en(track, race_time, answer, lap_flow, lap_time):
 failed_aprox = 'У нас пока недостаточно данных для примерного расчета топлива на этой трассе'
 failed_aprox_en = "We don't have enough data yet to make an approximate calculation."
 
-fail_tg = f'У нас пока нет трек гайдов для этой трассы под этот автомобиль'
-fail_tg_en = f"We don't have track guide for this car on this track yet"
+def fail_tg(lang):
+    if lang == 'RUS':
+        return f'У нас пока нет трек гайдов для этой трассы под этот автомобиль'
+    else:
+        return f"We don't have track guide for this car on this track yet"
 
-fail_setup = 'У нас пока нет сетапов для этой машины и трассы'
-fail_setup_en = "We don't have setups for this car on this track yet"
+def fail_setup(lang):
+    if lang == 'RUS':
+        return 'У нас пока нет сетапов для этой машины и трассы'
+    else:
+        return "We don't have setups for this car on this track yet"

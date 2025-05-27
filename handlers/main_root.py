@@ -10,9 +10,9 @@ import os
 
 main_root_router = Router()
 
-# /start
 @main_root_router.message(Command('start'))  # стартовое сообщение
 async def cmd_start(message: Message):
+    '''/start - стартовое сообщение'''
     user_id = message.from_user.id
     user_initialization(user_id) #инициализация юзера
     if await user_language.get(message.from_user.id) is None: #если язык не выбран
@@ -24,23 +24,23 @@ async def cmd_start(message: Message):
     await message.answer(awr_text, reply_markup=keyboard, parse_mode='Markdown') #отправляем сообщение
 
 
-# Выбор языка: ENG
 @main_root_router.message(F.text == message_descriptor.eng)
 async def select_eng(message: Message):
+    '''ENG - Выбор английского языка'''
     await user_language.put(message.from_user.id, message.from_user.username, 'ENG')
     await cmd_start(message)
 
 
-# Выбор языка: RUS
 @main_root_router.message(F.text == message_descriptor.rus)
 async def select_rus(message: Message):
+    '''RUS - Выбор русского языка'''
     await user_language.put(message.from_user.id, message.from_user.username, 'RUS')
     await cmd_start(message)
 
 
-# Выбор языка: смена языка
 @main_root_router.message(F.text == message_descriptor.leng_swap)
 async def len_swap(message: Message):
+    '''RU 🇷🇺 🔄 EN 🇬🇧 - смена языка'''
     if await user_language.get(message.from_user.id) == 'ENG':
         await user_language.put(message.from_user.id, message.from_user.username, 'RUS')
     else:
@@ -48,114 +48,108 @@ async def len_swap(message: Message):
     await cmd_start(message)
 
 
-# Сброс кеша
 @main_root_router.message(F.text == message_descriptor.drop)
-async def cash_drop(message: Message):
-    delete_cash(message.from_user.id)
+async def caсhe_drop(message: Message):
+    '''Сбросить кеш'''
+    delete_cache(message.from_user.id)
     await cmd_start(message)
 
 
 @main_root_router.message(F.text == message_descriptor.drop_en)
-async def cash_drop_en(message: Message):
-    await cash_drop(message)
+async def cache_drop_en(message: Message):
+    '''Drop the сache'''
+    await caсhe_drop(message)
 
 
-# кнопка 'В начало'
 @main_root_router.message(F.text == message_descriptor.reboot)
 async def reboot(message: Message):
+    '''⬅️ В начало'''
     delete_selection(message.from_user.id)
     await cmd_start(message)  # Отправляем ему стартовое сообщение
 
 
-# кнопка 'to start'
 @main_root_router.message(F.text == message_descriptor.reboot_en)
 async def reboot_en(message: Message):
+    '''⬅️ To start'''
     await reboot(message)
 
 
-#/start -> выбор машины
 @main_root_router.message(F.text == message_descriptor.car_select)
 async def car_selector(message: Message):
+    '''🏎️ Выбрать машину'''
     user_selection.put(message.from_user.id, 'track_selector', False)
     user_selection.put(message.from_user.id, 'car_selector', True)
-    await message.answer(messages.car_select_message
-                    if await user_language.get(message.from_user.id) == 'RUS'
-                    else messages.car_select_message_en)
+    await message.answer(messages.car_select_message(await user_language.get(message.from_user.id)))
 
 
-#/start -> car select
 @main_root_router.message(F.text == message_descriptor.car_select_en)
 async def car_selector_en(message: Message):
+    '''🏎️ Select a car'''
     await car_selector(message)
 
 
-# /start -> Выбор трассы
 @main_root_router.message(F.text == message_descriptor.track_select)
 async def track_selector(message: Message):
-
-
-
+    '''🏁 Выбрать трассу'''
     user_selection.put(message.from_user.id, 'car_selector', False)
     user_selection.put(message.from_user.id, 'track_selector', True)
-    await message.answer(messages.track_select_message
-                   if await user_language.get(message.from_user.id) == 'RUS'
-                   else messages.track_select_message_en)
+    await message.answer(messages.track_select_message(await user_language.get(message.from_user.id)))
 
 
-#/start -> track select
 @main_root_router.message(F.text == message_descriptor.track_select_en)
 async def track_selector_en(message: Message):
+    '''🏁 Select a track'''
     await track_selector(message)
 
 
-#/start -> трек гайд
 @main_root_router.message(F.text == message_descriptor.track_guide)
 async def track_guide(message: Message):
+    '''📚 Трекгайды'''
     car = user_selection.get(message.from_user.id, 'car')
     track = user_selection.get(message.from_user.id, 'track')
-    if car != None and track != None:
-        answer = await trackguide_select(car, track)
-        if answer is None or answer == '':
-            await message.answer(messages.fail_tg
-                if await user_language.get(message.from_user.id) == 'RUS'
-                else messages.fail_tg_en)
-        else:
-            await message.answer(f'{answer}')
-    else:
+    if car is None or track is None:
         await cmd_start(message)
+        raise SkipHandler
+    answer = await trackguide_select(car, track)
+    if answer is None or answer == '':
+        await message.answer(messages.fail_tg(await user_language.get(message.from_user.id)))
+    else:
+        await message.answer(f'{answer}')
 
 
-#/start -> track guide
 @main_root_router.message(F.text == message_descriptor.track_guide_en)
 async def track_guide_en(message: Message):
+    '''🏁 Select a track'''
     await track_guide(message)
 
 
-#/start -> сетпы
 @main_root_router.message(F.text == message_descriptor.setups)
 async def setup(message: Message):
+    '''🛠 Сетапы'''
     car = user_selection.get(message.from_user.id, 'car')
     track = user_selection.get(message.from_user.id, 'track')
-    if car != None and track != None:
-        path = f'setups/{car[1:]}/{track[1:]}/setups.zip'
-        if os.path.isfile(path):
-            await message.answer_document(FSInputFile(path))
-        else:
-            await message.answer(messages.fail_setup if await user_language.get(
-                message.from_user.id) == 'RUS' else messages.fail_setup_en)
-    else:
+    if car is None or track is None:
         await cmd_start(message)
+        raise SkipHandler
+    path = f'setups/{car[1:]}/{track[1:]}/setups.zip'
+    if os.path.isfile(path):
+        await message.answer_document(FSInputFile(path))
+    else:
+        await message.answer(messages.fail_setup(await user_language.get(message.from_user.id)))
 
 
-#/start -> setups
+
 @main_root_router.message(F.text == message_descriptor.setups_en)
 async def setups_en(message: Message):
+    '''🛠 Setups'''
     await setup(message)
 
 
-# хендлер для ответов на выбор трасс или машин
 @main_root_router.message()
 async def handler_selector(message: Message):
+    '''Хендлер для перехвата сообщений с выбранными трассами и машинами
+       Если в момент перехвата бот не находится в состоянии выбора машины или трассы,
+       хендлер вернет сообщение в роутер для проверки в следующих хендлерах'''
     match (message.from_user.id):
         case (id) if user_selection.get(id, 'car_selector'):
             car_selecion(id, message.text)
