@@ -6,13 +6,19 @@ def start_message_letter(car, track):
             f'🏎️ Текущая машина:   *{car[1:] if car != None else "Нет выбранной машины"}*\n'
             f'🏁 Текущая трасса:   *{track[1:] if track != None else "Нет выбранной трассы"}*')
 
+start_msg_placeholder = 'Чем займемся сегодня?'
+start_msg_placeholder_en = 'What do you want to do?'
+
 def start_message_letter_en(car, track):
     return (f'Hello! It is bot-helper for the Asetto Corsa Competizione!\n\n'
-            f'Choose your car and track to get track guide and setups.\n\n'
-            f'To apply the setups to the car, open the archive and place the files from it into the path:\n '
+            f'In order to get your track guide and setups, you need to choose your car and track:\n '
+            f'In order to apply the setups to the car, open the archive and place the files from it into the path:\n'
             f'___C:\\users\\username\\Assetto Corsa Competizione\\Setups\\car folder\\track folder___\n\n'
             f'🏎️ Current car:   *{car[1:] if car != None else "No selected car"}*\n'
             f'🏁 Current track:   *{track[1:] if track != None else "No selected track"}*')
+
+lang_select = (f'Select your language:\n'
+               f'Выбери язык:')
 
 car_select_message = (f'Выбери машину:\n\n'
                         f'Porsche:\n'
@@ -154,3 +160,6 @@ failed_aprox_en = "We don't have enough data yet to make an approximate calculat
 
 fail_tg = f'У нас пока нет трек гайдов для этой трассы под этот автомобиль'
 fail_tg_en = f"We don't have track guide for this car on this track yet"
+
+fail_setup = 'У нас пока нет сетапов для этой машины и трассы'
+fail_setup_en = "We don't have setups for this car on this track yet"

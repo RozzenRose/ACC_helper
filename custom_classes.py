@@ -29,7 +29,7 @@ class UserSelection(Data):
     data = {}
     _instance = None
 
-    def __init__(self, user_id=None):
+    def data_check(self, user_id=None):
         if user_id not in self.data:
             if user_id is not None:
                 self.data[user_id] = {
@@ -43,7 +43,7 @@ class UserData(Data):
     data = {}
     _instance = None
 
-    def __init__(self, user_id=None):
+    def data_check(self, user_id=None):
         if user_id not in self.data:
             if user_id is not None:
                 self.data[user_id] = {
@@ -59,21 +59,20 @@ class LanguageSelect(Data):
     user_language = {}
     _instance = None
 
-    def __init__(self, user_id=None):
-        if user_id not in self.user_language:
-            if user_id is not None:
-                #запросить в базе данных язык, если его там нет, вернется None
-                self.user_language[user_id] = None
+    def data_check(self, user_id=None):
+        if user_id not in self.user_language: #проверяем есть ли пользоватлеь в ОЗУ
+            if user_id is not None: #если нет
+                self.user_language[user_id] = None #заносим его туда, не определяя язык
 
     async def put(self, user_id, username, value):
-        self.user_language[user_id] = value
-        await insert_user_data(user_id, username, value)
+        self.user_language[user_id] = value #кладем выбранный язык в ОЗУ
+        await insert_user_data(user_id, username, value) #кладем выбранный язык в БД
 
     async def get(self, user_id):
-        user_data = self.user_language.get(user_id, None) #Проверяем наличие данных а оперативке
+        user_data = self.user_language.get(user_id, None) #Проверяем наличие данных в оперативке
         if user_data is None: #если данных в оперативке нет
-            user_data = await select_user_leng(user_id) #проверяем наличие данных в СУБД
-        return user_data
+            user_data = await select_user_leng(user_id) #проверяем наличие данных в БД
+        return user_data #возвращаем ответ
 
 
 user_language = LanguageSelect()

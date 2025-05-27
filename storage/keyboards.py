@@ -1,6 +1,8 @@
 from aiogram import types
 import message_descriptor
 
+lang_select = [[types.KeyboardButton(text=message_descriptor.eng), types.KeyboardButton(text=message_descriptor.rus)]]
+
 start_message = [[types.KeyboardButton(text=message_descriptor.calc_select)],  # создаем клавиши
                 [types.KeyboardButton(text=message_descriptor.car_select), types.KeyboardButton(text=message_descriptor.track_select)],
                 [types.KeyboardButton(text=message_descriptor.setups), types.KeyboardButton(text=message_descriptor.track_guide)],
