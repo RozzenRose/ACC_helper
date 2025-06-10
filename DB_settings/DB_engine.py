@@ -11,3 +11,10 @@ engine = create_async_engine(
 )
 
 session_factory = async_sessionmaker(engine)
+
+async def get_db():
+    db = session_factory()
+    try:
+        yield db
+    finally:
+        await db.close()

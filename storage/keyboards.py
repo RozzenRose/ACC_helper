@@ -15,36 +15,47 @@ def start_message(lang):
                 [types.KeyboardButton(text=message_descriptor.setups_en), types.KeyboardButton(text=message_descriptor.track_guide_en)],
                 [types.KeyboardButton(text=message_descriptor.leng_swap),types.KeyboardButton(text=message_descriptor.drop_en)]]
 
-calculator_select = [[types.KeyboardButton(text=message_descriptor.accur), types.KeyboardButton(text='Примерный')],
-                    [types.KeyboardButton(text=message_descriptor.reboot)]]
+def calculator_select(lang):
+    if lang == 'RUS':
+        return [[types.KeyboardButton(text=message_descriptor.accur), types.KeyboardButton(text='Примерный')],
+                [types.KeyboardButton(text=message_descriptor.reboot)]]
+    else:
+        return [[types.KeyboardButton(text=message_descriptor.accur_en), types.KeyboardButton(text='Approximate')],
+                [types.KeyboardButton(text=message_descriptor.reboot_en)]]
 
-calculator_select_en = [[types.KeyboardButton(text=message_descriptor.accur_en), types.KeyboardButton(text='Approximate')],
-                        [types.KeyboardButton(text=message_descriptor.reboot_en)]]
-
-accure = [[types.KeyboardButton(text=message_descriptor.ff_get)],
-        [types.KeyboardButton(text=message_descriptor.lt_get)],
-        [types.KeyboardButton(text=message_descriptor.rt_get)],
-        [types.KeyboardButton(text=message_descriptor.reboot)]]
-
-accure_en = [[types.KeyboardButton(text=message_descriptor.ff_get_en)],
-            [types.KeyboardButton(text=message_descriptor.lt_get_en)],
-            [types.KeyboardButton(text=message_descriptor.rt_get_en)],
-            [types.KeyboardButton(text=message_descriptor.reboot_en)]]
-
-get_info_calc = [[types.KeyboardButton(text=message_descriptor.back_to_accur)],
-              [types.KeyboardButton(text=message_descriptor.reboot)]]
-
-get_info_calc_en = [[types.KeyboardButton(text=message_descriptor.back_to_accur_en)],
-              [types.KeyboardButton(text=message_descriptor.reboot_en)]]
-
-get_ap_calc = [[types.KeyboardButton(text=message_descriptor.track_select)],
+def accure(lang):
+    if lang == 'RUS':
+        return [[types.KeyboardButton(text=message_descriptor.ff_get)],
+                [types.KeyboardButton(text=message_descriptor.lt_get)],
                 [types.KeyboardButton(text=message_descriptor.rt_get)],
                 [types.KeyboardButton(text=message_descriptor.reboot)]]
+    else:
+        return [[types.KeyboardButton(text=message_descriptor.ff_get_en)],
+                [types.KeyboardButton(text=message_descriptor.lt_get_en)],
+                [types.KeyboardButton(text=message_descriptor.rt_get_en)],
+                [types.KeyboardButton(text=message_descriptor.reboot_en)]]
 
-get_ap_calc_en = [[types.KeyboardButton(text=message_descriptor.track_select_en)],
-                  [types.KeyboardButton(text=message_descriptor.rt_get_en)],
-                  [types.KeyboardButton(text=message_descriptor.reboot_en)]]
+def get_info_calc(lang):
+    if lang == 'RUS':
+        return [[types.KeyboardButton(text=message_descriptor.back_to_accur)],
+                [types.KeyboardButton(text=message_descriptor.reboot)]]
+    else:
+        return [[types.KeyboardButton(text=message_descriptor.back_to_accur_en)],
+                [types.KeyboardButton(text=message_descriptor.reboot_en)]]
 
-only_back = [[types.KeyboardButton(text=message_descriptor.reboot)]]
+def get_ap_calc(lang):
+    if lang == 'RUS':
+        return [[types.KeyboardButton(text=message_descriptor.track_select)],
+                [types.KeyboardButton(text=message_descriptor.rt_get)],
+                [types.KeyboardButton(text=message_descriptor.reboot)]]
+    else:
+        return [[types.KeyboardButton(text=message_descriptor.track_select_en)],
+                [types.KeyboardButton(text=message_descriptor.rt_get_en)],
+                [types.KeyboardButton(text=message_descriptor.reboot_en)]]
 
-only_back_en = [[types.KeyboardButton(text=message_descriptor.reboot_en)]]
+def only_back(lang):
+    if lang == 'RUS':
+        return [[types.KeyboardButton(text=message_descriptor.reboot)]]
+    else:
+        return [[types.KeyboardButton(text=message_descriptor.reboot_en)]]
+

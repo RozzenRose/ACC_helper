@@ -3,25 +3,26 @@ from aiogram.filters import Command
 from aiogram.types import Message, FSInputFile
 import message_descriptor
 from aiogram.dispatcher.event.bases import SkipHandler
-from handlers.functions.main_root_functions import*
+from handlers.functions.main_root_functions import *
 import os
 
 # Основной рут бота
 
 main_root_router = Router()
 
+
 @main_root_router.message(Command('start'))  # стартовое сообщение
 async def cmd_start(message: Message):
     '''/start - стартовое сообщение'''
     user_id = message.from_user.id
-    user_initialization(user_id) #инициализация юзера
-    if await user_language.get(message.from_user.id) is None: #если язык не выбран
-        awr_text, keyboard = lang_select_message() #собиравем сообщение для выбора языка
+    user_initialization(user_id)  # инициализация юзера
+    if await user_language.get(user_id) is None:  # если язык не выбран
+        awr_text, keyboard = lang_select_message()  # собиравем сообщение для выбора языка
     else:
-        awr_text, keyboard = start_message(user_selection.get(user_id, 'car'), #собираем стартовое сообщение
+        awr_text, keyboard = start_message(user_selection.get(user_id, 'car'),  # собираем стартовое сообщение
                                            user_selection.get(user_id, 'track'),
                                            await user_language.get(user_id))
-    await message.answer(awr_text, reply_markup=keyboard, parse_mode='Markdown') #отправляем сообщение
+    await message.answer(awr_text, reply_markup=keyboard, parse_mode='Markdown')  # отправляем сообщение
 
 
 @main_root_router.message(F.text == message_descriptor.eng)
@@ -138,7 +139,6 @@ async def setup(message: Message):
         await message.answer(messages.fail_setup(await user_language.get(message.from_user.id)))
 
 
-
 @main_root_router.message(F.text == message_descriptor.setups_en)
 async def setups_en(message: Message):
     '''🛠 Setups'''
@@ -152,12 +152,13 @@ async def handler_selector(message: Message):
        хендлер вернет сообщение в роутер для проверки в следующих хендлерах'''
     match (message.from_user.id):
         case (id) if user_selection.get(id, 'car_selector'):
-            car_selecion(id, message.text)
-            await cmd_start(message)
+            if car_selection(id, message.text):
+                reset_select()
+                await cmd_start(message)
 
         case (id) if user_selection.get(id, 'track_selector'):
-            track_selection(id, message.text)
-            await cmd_start(message)
+            if track_selection(id, message.text):
+                reset_select()
+                await cmd_start(message)
 
-    reset_select()
     raise SkipHandler
