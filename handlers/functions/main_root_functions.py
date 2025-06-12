@@ -4,7 +4,6 @@ from aiogram import types
 import storage.messages as messages
 from sqlalchemy import text
 from DB_settings.DB_engine import engine
-from aiogram.dispatcher.event.bases import SkipHandler
 
 
 def user_initialization(id: int):

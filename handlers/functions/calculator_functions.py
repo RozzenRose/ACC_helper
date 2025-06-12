@@ -1,6 +1,6 @@
 from custom_classes import user_data
 import storage.keyboards as keyboards
-from custom_classes import accurate_calculation, user_language
+from custom_classes import accurate_calculation
 from aiogram import types
 import storage.messages as messages
 from datetime import timedelta
