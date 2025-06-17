@@ -13,6 +13,7 @@ class TestMainRoot(unittest.IsolatedAsyncioTestCase):
         self.mock_message.from_user = User(id=12345, username='test_user', is_bot=False, first_name="Test")
         self.mock_message.answer = AsyncMock()
         self.mock_message.answer_document = AsyncMock()
+        self.mock_message.text = 'test_text'
 
 
     async def test_cmd_start_with_lang(self):
@@ -98,13 +99,6 @@ class TestMainRoot(unittest.IsolatedAsyncioTestCase):
             start_mock.assert_called_once_with(self.mock_message) # проверка вызова cmd_start()
 
 
-    async def test_cache_drop_en(self):
-        '''Пороверяем функцию сброса кеша на английском языке'''
-        with patch('handlers.main_root.caсhe_drop', new_callable=AsyncMock) as cache_mock:
-            await main_root.cache_drop_en(self.mock_message)
-            cache_mock.assert_called_once_with(self.mock_message) # проверка вызова caсhe_drop()
-
-
     async def test_reboot(self):
         '''Проверка работы кнопки "⬅️ В начало"'''
         with (patch('handlers.main_root.mrf.delete_selection') as del_sel,
@@ -112,13 +106,6 @@ class TestMainRoot(unittest.IsolatedAsyncioTestCase):
             await main_root.reboot(self.mock_message)
             del_sel.assert_called_once_with(12345) #проверка функции сброса пользовательских выборов
             start_mock.assert_called_once_with(self.mock_message) # проверка вызова cmd_start()
-
-
-    async def test_reboot_en(self):
-        '''Проверка работы кнопки "⬅️ В начало"'''
-        with patch('handlers.main_root.reboot') as reboot_mock:
-            await main_root.reboot_en(self.mock_message)
-            reboot_mock.assert_called_once_with(self.mock_message) # проверка вызова reboot()
 
 
     async def test_car_selector(self):
@@ -134,13 +121,6 @@ class TestMainRoot(unittest.IsolatedAsyncioTestCase):
             self.mock_message.answer.assert_called_once()  # Проверяем, что сообщение отправлено
 
 
-    async def test_car_selector_en(self):
-        '''Тест функции выбора машин на английском'''
-        with patch('handlers.main_root.car_selector') as cs:
-            await main_root.car_selector_en(self.mock_message)
-            cs.assert_called_once_with(self.mock_message) # вызываем функцию выбора машины
-
-
     async def test_track_selector(self):
         '''Тест функции выбора трассы'''
         with (patch('handlers.main_root.user_selection.put') as sel_put,
@@ -152,13 +132,6 @@ class TestMainRoot(unittest.IsolatedAsyncioTestCase):
                                       any_order=True)
             tsm.assert_called_once_with(await lan_get(12345))
             self.mock_message.answer.assert_called_once()  # Проверяем, что сообщение отправлено
-
-
-    async def test_track_selector_en(self):
-        '''Тест функции выбора трассы на английском'''
-        with patch('handlers.main_root.track_selector') as ts:
-            await main_root.track_selector_en(self.mock_message)
-            ts.assert_called_once_with(self.mock_message) # вызываем функцию выбора трассы
 
 
     async def test_track_guide_wtihot_selection(self):
@@ -197,13 +170,6 @@ class TestMainRoot(unittest.IsolatedAsyncioTestCase):
             l_get.assert_called_once_with(12345)
             fail_tg.assert_called_once()
             self.mock_message.answer.assert_called_once()
-
-
-    async def test_track_guide_en(self):
-        '''Текст получения трекгайда на английском'''
-        with (patch('handlers.main_root.track_guide') as tg):
-            await main_root.track_guide_en(self.mock_message)
-            tg.assert_called_once_with(self.mock_message)
 
 
     async def test_setup_without_selection(self):
@@ -245,11 +211,63 @@ class TestMainRoot(unittest.IsolatedAsyncioTestCase):
             self.mock_message.answer.assert_called_once()
 
 
-    async def test_setup_en(self):
-        '''Тест получения сетапа на английском'''
-        with (patch('handlers.main_root.setup') as setup):
-            await main_root.setups_en(self.mock_message)
-            setup.assert_called_once_with(self.mock_message)
+    async def test_handler_selector_cs_with_valid_msg(self):
+        '''тест хендлера общего перехвата, при валидном сообщении с машиной'''
+        with (patch('handlers.main_root.user_selection.get') as cs,
+              patch('handlers.main_root.mrf.car_selection') as car_s,
+              patch('handlers.main_root.mrf.reset_select') as rs,
+              patch('handlers.main_root.cmd_start') as start_message):
+            cs.return_value = True
+            car_s.return_value = True
+            await main_root.handler_selector(self.mock_message)
+            cs.assert_called_once_with(12345, 'car_selector')
+            car_s.assert_called_once_with(12345, 'test_text')
+            rs.assert_called_once()
+            start_message.assert_called_once_with(self.mock_message)
+
+
+    async def test_handler_selector_cs_without_valid_msg(self):
+        '''тест хендлера общего перехвата, при не валидном сообщении с машиной'''
+        with (patch('handlers.main_root.user_selection.get') as cs,
+              patch('handlers.main_root.mrf.car_selection') as car_s):
+            cs.return_value = True
+            car_s.return_value = False
+            with self.assertRaises(SkipHandler):
+                await main_root.handler_selector(self.mock_message)
+            cs.assert_called_once_with(12345, 'car_selector')
+            car_s.assert_called_once_with(12345, 'test_text')
+
+
+    async def test_handler_selector_ts_with_valid_msg(self):
+        '''тест хендлера общего перехвата, при валидном сообщении с треком'''
+        with (patch('handlers.main_root.user_selection.get', side_effect=[False, True]) as ts,
+              patch('handlers.main_root.mrf.track_selection') as track_s,
+              patch('handlers.main_root.mrf.reset_select') as rs,
+              patch('handlers.main_root.cmd_start') as start_message):
+            track_s.return_value = True
+            await main_root.handler_selector(self.mock_message)
+            ts.assert_has_calls([call(12345, 'car_selector'), call(12345, 'track_selector')])
+            track_s.assert_called_once_with(12345, 'test_text')
+            rs.assert_called_once()
+            start_message.assert_called_once_with(self.mock_message)
+
+
+    async def test_handler_selector_ts_without_valid_msg(self):
+        '''тест хендлера общего перехвата, при не валидном сообщении с треком'''
+        with (patch('handlers.main_root.user_selection.get', side_effect=[False, True]) as ts,
+              patch('handlers.main_root.mrf.track_selection') as track_s):
+            track_s.return_value = False
+            with self.assertRaises(SkipHandler):
+                await main_root.handler_selector(self.mock_message)
+            ts.assert_has_calls([call(12345, 'car_selector'), call(12345, 'track_selector')])
+            track_s.assert_called_once_with(12345, 'test_text')
+
+
+    async def test_handler_selector_without_selections(self):
+        '''тест освобожения сообщения из общего хендлера'''
+        with (patch('handlers.main_root.user_selection.get', side_effect=[False, False]) as ts):
+            with self.assertRaises(SkipHandler):
+                await main_root.handler_selector(self.mock_message)
 
 
 if __name__ == "__main__":

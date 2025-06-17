@@ -52,63 +52,39 @@ async def lan_swap(message: Message):
     await cmd_start(message)
 
 
-@main_root_router.message(F.text == message_descriptor.drop)
+@main_root_router.message(F.text.in_({message_descriptor.drop, message_descriptor.drop_en}))
 async def caсhe_drop(message: Message):
-    '''Сбросить кеш'''
+    '''Сбросить кеш / drop the cache'''
     mrf.delete_cache(message.from_user.id)
     await cmd_start(message)
 
 
-@main_root_router.message(F.text == message_descriptor.drop_en)
-async def cache_drop_en(message: Message):
-    '''Drop the сache'''
-    await caсhe_drop(message)
-
-
-@main_root_router.message(F.text == message_descriptor.reboot)
+@main_root_router.message(F.text.in_({message_descriptor.reboot, message_descriptor.reboot_en}))
 async def reboot(message: Message):
-    '''⬅️ В начало'''
+    '''⬅️ В начало / ️⬅️ To start'''
     mrf.delete_selection(message.from_user.id)
     await cmd_start(message)  # Отправляем ему стартовое сообщение
 
 
-@main_root_router.message(F.text == message_descriptor.reboot_en)
-async def reboot_en(message: Message):
-    '''⬅️ To start'''
-    await reboot(message)
-
-
-@main_root_router.message(F.text == message_descriptor.car_select)
+@main_root_router.message(F.text.in_({message_descriptor.car_select, message_descriptor.car_select_en}))
 async def car_selector(message: Message):
-    '''🏎️ Выбрать машину'''
+    '''🏎️ Выбрать машину / 🏎️ Select a car'''
     user_selection.put(message.from_user.id, 'track_selector', False)
     user_selection.put(message.from_user.id, 'car_selector', True)
     await message.answer(messages.car_select_message(await user_language.get(message.from_user.id)))
 
 
-@main_root_router.message(F.text == message_descriptor.car_select_en)
-async def car_selector_en(message: Message):
-    '''🏎️ Select a car'''
-    await car_selector(message)
-
-
-@main_root_router.message(F.text == message_descriptor.track_select)
+@main_root_router.message(F.text.in_({message_descriptor.track_select, message_descriptor.track_select_en}))
 async def track_selector(message: Message):
-    '''🏁 Выбрать трассу'''
+    '''🏁 Выбрать трассу / 🏁 Select a track'''
     user_selection.put(message.from_user.id, 'car_selector', False)
     user_selection.put(message.from_user.id, 'track_selector', True)
     await message.answer(messages.track_select_message(await user_language.get(message.from_user.id)))
 
 
-@main_root_router.message(F.text == message_descriptor.track_select_en)
-async def track_selector_en(message: Message):
-    '''🏁 Select a track'''
-    await track_selector(message)
-
-
-@main_root_router.message(F.text == message_descriptor.track_guide)
+@main_root_router.message(F.text.in_({message_descriptor.track_guide, message_descriptor.track_guide_en}))
 async def track_guide(message: Message):
-    '''📚 Трекгайды'''
+    '''📚 Трекгайды / 📚 Trackguides'''
     car = user_selection.get(message.from_user.id, 'car')
     track = user_selection.get(message.from_user.id, 'track')
     if car is None or track is None:
@@ -121,15 +97,9 @@ async def track_guide(message: Message):
         await message.answer(f'{answer}')
 
 
-@main_root_router.message(F.text == message_descriptor.track_guide_en)
-async def track_guide_en(message: Message):
-    '''📚 Trackguides'''
-    await track_guide(message)
-
-
-@main_root_router.message(F.text == message_descriptor.setups)
+@main_root_router.message(F.text.in_({message_descriptor.setups, message_descriptor.setups_en}))
 async def setup(message: Message):
-    '''🛠 Сетапы'''
+    '''🛠 Сетапы / 🛠 Setups'''
     car = user_selection.get(message.from_user.id, 'car')
     track = user_selection.get(message.from_user.id, 'track')
     if car is None or track is None:
@@ -142,12 +112,6 @@ async def setup(message: Message):
         await message.answer(messages.fail_setup(await user_language.get(message.from_user.id)))
 
 
-@main_root_router.message(F.text == message_descriptor.setups_en)
-async def setups_en(message: Message):
-    '''🛠 Setups'''
-    await setup(message)
-
-
 @main_root_router.message()
 async def handler_selector(message: Message):
     '''Хендлер для перехвата сообщений с выбранными трассами и машинами
@@ -156,12 +120,14 @@ async def handler_selector(message: Message):
     match (message.from_user.id):
         case (id) if user_selection.get(id, 'car_selector'):
             if mrf.car_selection(id, message.text):
-                mrf.reset_select()
+                mrf.reset_select(id)
                 await cmd_start(message)
+                return
 
         case (id) if user_selection.get(id, 'track_selector'):
             if mrf.track_selection(id, message.text):
-                mrf.reset_select()
+                mrf.reset_select(id)
                 await cmd_start(message)
+                return
 
     raise SkipHandler

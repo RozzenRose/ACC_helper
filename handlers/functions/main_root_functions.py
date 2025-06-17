@@ -62,7 +62,7 @@ async def trackguide_select(car, track):
             return None
 
 
-def reset_select():
+def reset_select(id):
     '''Сбрасываем флаги состояний выбора трека и маашины'''
     user_selection.put(id, 'track_selector', False)
     user_selection.put(id, 'car_selector', False)
@@ -72,7 +72,7 @@ def car_selection(id, msg):
     '''Устанавливаем автомобиль в качестве выбранного'''
     if msg[0] == '/':
         user_selection.put(id, 'car', msg)
-        reset_select()
+        reset_select(id)
         return True
     return False
 
@@ -83,6 +83,6 @@ def track_selection(id, msg):
         user_selection.put(id, 'track', msg)
         if user_data.get(id, 'calculator_works'):
             return False
-        reset_select()
+        reset_select(id)
         return True
     return False
