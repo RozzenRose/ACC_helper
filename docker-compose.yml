@@ -1,0 +1,25 @@
+services:
+  acc_helper:
+    #Берем Dockerfile из каталога app
+    build:
+      context: .
+      dockerfile: ./app/Dockerfile
+    # Запускаем файл бота
+    command: python ./app/ACC_helper.py
+    depends_on:
+      - acc_helper_db
+
+  acc_helper_db:
+    image: postgres:alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - ./pg_backups:/backups
+    ports:
+      - "5555:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=2580
+      - POSTGRES_DB=postgres
+
+volumes:
+  postgres_data:
