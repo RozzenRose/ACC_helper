@@ -1,7 +1,6 @@
 from datetime import timedelta
 import math
-import asyncio
-from DB_settings.DB_func import insert_user_data, select_user_leng
+from app.DB_settings.DB_func import insert_user_data, select_user_leng
 
 class Data:
     def __new__(cls, *arg, **kwargs):
