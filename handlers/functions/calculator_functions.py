@@ -8,7 +8,6 @@ from datetime import timedelta
 
 def fuel_calc_builder(lang):
     '''Создаем объекты для сообщения с выбором калькулятора'''
-    keyboards.calculator_select(lang)
     keyboard = types.ReplyKeyboardMarkup(keyboard=keyboards.calculator_select(lang), resize_keyboard=True,
                                          input_field_placeholder=messages.calculator_msg_placeholder(lang))
     msg = messages.calculator_selector(lang)

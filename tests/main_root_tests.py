@@ -268,6 +268,7 @@ class TestMainRoot(unittest.IsolatedAsyncioTestCase):
         with (patch('handlers.main_root.user_selection.get', side_effect=[False, False]) as ts):
             with self.assertRaises(SkipHandler):
                 await main_root.handler_selector(self.mock_message)
+            ts.assert_has_calls([call(12345, 'car_selector'), call(12345, 'track_selector')])
 
 
 if __name__ == "__main__":

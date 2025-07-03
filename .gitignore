@@ -1,5 +1,6 @@
 .env
 config.py
+alembic.ini
 .venv/
 venv/
 .idea/
