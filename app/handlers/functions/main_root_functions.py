@@ -1,9 +1,9 @@
-from custom_classes import user_data, user_selection, user_language
-import storage.keyboards as keyboards
+from app.custom_classes import user_data, user_selection, user_language
+import app.storage.keyboards as keyboards
 from aiogram import types
-import storage.messages as messages
+import app.storage.messages as messages
 from sqlalchemy import text
-from DB_settings.DB_engine import engine
+from app.DB_settings.DB_engine import engine
 
 
 def user_initialization(id: int):

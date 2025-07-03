@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch, call
-from handlers.functions import main_root_functions
+from app.handlers.functions import main_root_functions
 
 
 class TestMainRootFunctions(unittest.IsolatedAsyncioTestCase):

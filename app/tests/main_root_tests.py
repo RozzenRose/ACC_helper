@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import call
 from unittest.mock import AsyncMock, patch
 from aiogram.types import Message, User
-from handlers import main_root
+from app.handlers import main_root
 from aiogram.dispatcher.event.bases import SkipHandler
 
 

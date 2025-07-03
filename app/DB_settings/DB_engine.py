@@ -1,4 +1,4 @@
-from DB_settings.DB_config import settings
+from app.DB_settings.DB_config import settings
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase
 

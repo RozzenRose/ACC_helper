@@ -1,11 +1,11 @@
 from aiogram import F, Router
 from aiogram.types import Message
 from aiogram.dispatcher.event.bases import SkipHandler
-import message_descriptor
-from custom_classes import user_data, user_language, user_selection
-from handlers.functions import calculator_functions as cf
-import DB_settings.DB_func as DB_func
-from storage import messages
+from app import message_descriptor
+from app.custom_classes import user_data, user_language, user_selection
+from app.handlers.functions import calculator_functions as cf
+import app.DB_settings.DB_func as DB_func
+from app.storage import messages
 
 # рут калькулятора
 

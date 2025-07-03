@@ -1,8 +1,8 @@
-.env
+app/.env
 config.py
 alembic.ini
 .venv/
 venv/
 .idea/
 __pycache__/
-handlers/__pycache__
+app/handlers/__pycache__

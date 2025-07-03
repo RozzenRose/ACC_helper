@@ -1,11 +1,11 @@
 from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.types import Message, FSInputFile
-import message_descriptor
+from app import message_descriptor
 from aiogram.dispatcher.event.bases import SkipHandler
-from handlers.functions import main_root_functions as mrf
-from custom_classes import user_selection, user_language
-from storage import messages
+from app.handlers.functions import main_root_functions as mrf
+from app.custom_classes import user_selection, user_language
+from app.storage import messages
 import os
 
 # Основной рут бота
@@ -105,7 +105,7 @@ async def setup(message: Message):
     if car is None or track is None:
         await cmd_start(message)
         raise SkipHandler
-    path = f'setups/{car[1:]}/{track[1:]}/setups.zip'
+    path = f'app/setups/{car[1:]}/{track[1:]}/setups.zip'
     if os.path.isfile(path):
         await message.answer_document(FSInputFile(path))
     else:

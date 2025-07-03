@@ -1,6 +1,6 @@
-import DB_settings.models as models
+import app.DB_settings.models as models
 from sqlalchemy.dialects.postgresql.dml import insert
-from DB_settings.DB_engine import session_factory
+from app.DB_settings.DB_engine import session_factory
 from sqlalchemy.future import select
 
 
@@ -21,7 +21,7 @@ async def insert_user_data(user_id: int, username: str, language: str):
 
 async def select_user_leng(user_id: int) -> str:
     async with session_factory() as session:
-        lang = select(models.UsersOrm.user_language).where(models.UsersOrm.user_id==user_id)
+        lang = select(models.UsersOrm.user_language).where(models.UsersOrm.user_id == user_id)
         result = await session.execute(lang)
         try:
             return result.all()[0][0]

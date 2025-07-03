@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch, AsyncMock, call
 from aiogram.types import Message, User
-from handlers import calculator
+from app.handlers import calculator
 from aiogram.dispatcher.event.bases import SkipHandler
 from datetime import timedelta
 

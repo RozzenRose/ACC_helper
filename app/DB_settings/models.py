@@ -1,7 +1,6 @@
-﻿from DB_settings.DB_engine import Base
-from sqlalchemy.orm import Mapped, mapped_column
+﻿from app.DB_settings.DB_engine import Base
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Interval
-from datetime import timedelta
+
 
 class UsersOrm(Base):
     __tablename__ = 'Users'

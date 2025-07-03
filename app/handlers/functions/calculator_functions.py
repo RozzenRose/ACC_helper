@@ -1,8 +1,8 @@
-from custom_classes import user_data
-import storage.keyboards as keyboards
-from custom_classes import accurate_calculation
+from app.custom_classes import user_data
+import app.storage.keyboards as keyboards
+from app.custom_classes import accurate_calculation
 from aiogram import types
-import storage.messages as messages
+import app.storage.messages as messages
 from datetime import timedelta
 
 

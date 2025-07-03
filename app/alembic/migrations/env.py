@@ -16,8 +16,8 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from DB_settings.DB_engine import Base
-from DB_settings.models import UsersOrm, Tracks, Cars, Info
+from app.DB_settings.DB_engine import Base
+
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
 

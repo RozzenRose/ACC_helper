@@ -1,7 +1,6 @@
 import unittest
-from unittest.mock import patch, AsyncMock, call
-from aiogram.types import Message, User
-from handlers.functions import calculator_functions
+from unittest.mock import patch, call
+from app.handlers.functions import calculator_functions
 from datetime import timedelta
 
 
