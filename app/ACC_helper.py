@@ -4,8 +4,10 @@ from app.DB_settings.config import API_TOKEN
 from app.handlers.main_root import main_root_router
 from app.handlers.calculator import calculator_router
 
+
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher()
+
 
 async def main(): #роутеры действительно вызываются в порядке, который указан тут
     dp.include_router(main_root_router)  #роутер для основного рута
