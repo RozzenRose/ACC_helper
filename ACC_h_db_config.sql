@@ -51,22 +51,6 @@ COPY public."Tracks" (id, track_name, turns, aproximate_flow, aproximate_time) F
 7	Mount_Panorama	23	\N	\N
 \.
 
-
---
--- Data for Name: Users; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public."Users" (user_id, username, user_language) FROM stdin;
-260215306	darkwoods	ENG
-1319917771	D_dremezov	ENG
-444898944	hardison144	RUS
-1102112300	\N	RUS
-292143060	wladbelsky	RUS
-382516979	EnderSony	RUS
-357827737	rozzenrose	RUS
-\.
-
-
 --
 -- Data for Name: Info; Type: TABLE DATA; Schema: public; Owner: postgres
 --
